@@ -1,45 +1,86 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.UI;
 public class CarControl : MonoBehaviour
 {
-    //GameObject.Find("Quest").GetComponent<Quest1>().usage
-
+    public GameObject Speedtext;
+    public GameObject text;
+    Text spText;
     public float Speed = 12f;                 // How fast the car moves forward and back.
     public float TurnSpeed = 180f;            // How fast the car turns in degrees per second.
-
-    private float MovementInputValue;         
-    private float TurnInputValue;
-    private Rigidbody Rigidbody;              // Reference used to move the car.
-
-   
-
+    public float MovementInputValue;         
+    public float TurnInputValue;
+    private Rigidbody Rigidbody;
+    public GameObject rightAlarm;
+    public GameObject leftAlarm;
+    public GameObject rightAlarmBack;
+    public GameObject leftAlarmBack;
+    public int rng=3;
+    public bool leftAlarmEnabled = false;
+    public bool rightAlarmEnabled = false;
+    public int checkMovement = 0;
+    AlarmHandler alarmHandler;
     private void Start()
     {
-        
         Rigidbody = GetComponent<Rigidbody>();
-       
     }
 
-    
+
 
     private void Update()
     {
-        
-            // Store the value of both input axes.
-            MovementInputValue = Input.GetAxis("Vertical");
-            TurnInputValue = Input.GetAxis("Horizontal");
-        
-        
+        MovementInputValue = Input.GetAxis("Vertical");
+        TurnInputValue = Input.GetAxis("Horizontal");
+        if (Input.GetKeyDown(KeyCode.U))
+        {
+            Speed += 5;
+        }
+        if (Input.GetKeyDown(KeyCode.I))
+        {
+            Speed -= 5;
+        }
+        if (MovementInputValue != 0 || TurnInputValue != 0)
+        {
+            checkMovement++;
+        }
+        if (Input.GetKeyDown(KeyCode.E)&&leftAlarmEnabled==false)
+        {
+            TurnOffOrOn(rightAlarm);
+            TurnOffOrOn(rightAlarmBack);
+            rightAlarmEnabled = !rightAlarmEnabled;
+            rng = 1;
+        }
+        if (Input.GetKeyDown(KeyCode.Q)&&rightAlarmEnabled == false)
+        {
+            TurnOffOrOn(leftAlarm);
+            TurnOffOrOn(leftAlarmBack);
+            leftAlarmEnabled = !leftAlarmEnabled;
+            rng = 2;
+        }
+
+
     }
 
+    public void TurnOffOrOn(GameObject g)
+    {
+        alarmHandler = g.GetComponent<AlarmHandler>();
+        if (alarmHandler.enabled == true)
+        {
+            Light l;
+            l = g.GetComponent<Light>();
+            l.enabled = false;
+        }
+        alarmHandler.enabled = !alarmHandler.enabled;
+    }
+    
     private void FixedUpdate()
     {
-            // Adjust the rigidbodies position and orientation in FixedUpdate.
-            Move();
-            Turn();
-        
+        // Adjust the rigidbodies position and orientation in FixedUpdate.
+        Move();
+        Turn();
+        spText = Speedtext.GetComponent<Text>();
+        spText.text = (Speed*MovementInputValue).ToString();    
     }
 
 
@@ -53,7 +94,7 @@ public class CarControl : MonoBehaviour
 
             // Apply this movement to the rigidbody's position.
             Rigidbody.MovePosition(Rigidbody.position + movement);
-        
+            
     }
 
 
@@ -68,6 +109,12 @@ public class CarControl : MonoBehaviour
             // Apply this rotation to the rigidbody's rotation.
             Rigidbody.MoveRotation(Rigidbody.rotation * turnRotation);
         
+    }
+    public void ChangeText(string s)
+    {
+        Text textemp;
+        textemp = text.GetComponent<Text>();
+        textemp.text = s;
     }
 
 }
