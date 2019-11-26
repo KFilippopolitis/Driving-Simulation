@@ -43,7 +43,7 @@ public class TrafficController : MonoBehaviour {
 
         if (other.CompareTag("Bots"))
         {
-            carMovement.SetTurningPoint();
+            carMovement.getpoint = 0;
             carMovement.Speed = 0;
             carMovement.turnStopOn(carMovement.stop1);
             carMovement.turnStopOn(carMovement.stop2);
@@ -60,11 +60,6 @@ public class TrafficController : MonoBehaviour {
     private void OnTriggerStay(Collider other)
     {
         carMovement = other.GetComponent<CarMovement>();
-        if (other.CompareTag("Bots"))
-        {
-            //carMovement.turnnow();
-        }
-
         if (priorityQueue.Count() != 0 && other == priorityQueue.PeekName() && firstwithpriority == 0)
         {
             if (other.CompareTag("Bots"))

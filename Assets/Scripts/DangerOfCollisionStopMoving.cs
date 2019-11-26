@@ -62,7 +62,7 @@ public class DangerOfCollisionStopMoving : MonoBehaviour {
         if (other.CompareTag("Bots")) 
         {
             carMovement = other.GetComponent<CarMovement>();
-            carMovement.Speed = 28f;
+            carMovement.Speed = 33f;
             carMovement.turnLightsOff(carMovement.stop1);
             carMovement.turnLightsOff(carMovement.stop2);
         }

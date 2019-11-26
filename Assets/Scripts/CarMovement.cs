@@ -19,10 +19,8 @@ public class CarMovement : MonoBehaviour {
     public GameObject stop2;
     public int rng;
     public int prio;
-    public float turningPointForX;
-    public float turningPointForZ;
-    public float addingDifference;
     public int count=0;
+    public float getpoint=0;
     void Start ()
     {
         Rigidbody = GetComponent<Rigidbody>();
@@ -34,8 +32,9 @@ public class CarMovement : MonoBehaviour {
     {
         
         Move();
+        getpoint = Speed * Time.deltaTime+getpoint;        
     }
-    
+
     void Update () {
         
         if (rng == 1)
@@ -43,7 +42,6 @@ public class CarMovement : MonoBehaviour {
            
             turnAlarmOn(rightAlarm);
             turnAlarmOn(rightAlarmBack);
-
         }
         else if (rng == 2)
         {
@@ -52,31 +50,41 @@ public class CarMovement : MonoBehaviour {
             turnAlarmOn(leftAlarmBack);
 
         }
-        
+
 
         if (temp!=state)
         {
             temp = state;
+        }
 
-            if (state == 1)
+        if (state == 1)
+        {
+            Speed = 33f;
+            turning = 90;
+            if (getpoint >= 75)
             {
-                Speed = 33f;
-                turning = 90;
-                Invoke("Turn", 2);
+                Turn();
+                getpoint = -100000000;
+            }
+                
+        }
+        else if (state == 2)
+        {
+            Speed = 34f;
+            turning = -90;
+            if (getpoint >= 100)
+            {
+                Turn();
+                getpoint = -100000000;
 
-            }
-            else if (state == 2)
-            {
-                Speed = 34f;
-                turning = -90;
-                Invoke("Turn", 3);
-            }
-            else if (state == 3)
-            {
-                Speed = 34f;
             }
 
         }
+        else if (state == 3)
+        {
+            Speed = 34f;
+        }
+
     }
                 
     private void Move()
@@ -90,54 +98,7 @@ public class CarMovement : MonoBehaviour {
 
     }
 
-    public void turnnow()
-    {
-        if (count==0)
-        {
-            if (transform.rotation.y <= 80)
-            {
-
-                if (transform.position.z >= turningPointForZ - 3)
-                {
-                    Turn();
-                    count++;
-                }
-
-            }
-            else if (transform.rotation.y <= 160)
-            {
-
-                if (transform.position.x >= turningPointForX - 3)
-                {
-                    Turn();
-                    count++;
-                }
-
-            }
-            else if (transform.rotation.y <= 240)
-            {
-
-                if (transform.position.z <= turningPointForZ + 3)
-                {
-                    Turn();
-                    count++;
-
-                }
-
-            }
-            else if (transform.rotation.y <= 300)
-            {
-
-                if (transform.position.x <= turningPointForX + 3)
-                {
-                    Turn();
-                    count++;
-                }
-
-            }
-        }
     
-    }
     public void turnStopOn(GameObject r)
     {
         Light a;
@@ -180,31 +141,13 @@ public class CarMovement : MonoBehaviour {
         Rigidbody.MoveRotation(Rigidbody.rotation * turnRotation);
 
     }
-    public void SetTurningPoint()
+
+    public void turnAround()
     {
-
-        if (transform.rotation.y <= 80)
-        {
-            turningPointForZ = transform.position.z+addingDifference;
-            turningPointForX = transform.position.x;
-
-        }
-        else if (transform.rotation.y <= 160)
-        {
-            turningPointForZ = transform.position.z;
-            turningPointForX = transform.position.x+addingDifference;
-        }
-        else if (transform.rotation.y <=240)
-        {
-            turningPointForZ = transform.position.z-addingDifference;
-            turningPointForX = transform.position.x;
-        }
-        else if (transform.rotation.y <=300)
-        {
-            turningPointForZ = transform.position.z;
-            turningPointForX = transform.position.x-addingDifference;
-        }
+        turning = -90;
+        Turn();
     }
-   
+
+
 
 }
