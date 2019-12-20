@@ -5,16 +5,10 @@ using UnityEngine.UI;
 
 public class DangerOfCollisionStopMoving : MonoBehaviour {
 
-    private CarMovement carMovement;
-    private CarControl carControl;
+    CarMovement carMovement;
+    CrazyCarMovement crazyCarMovement;
     private float speed = 40f;
-    Text text;
 
-    // Use this for initialization
-    void Start()
-    {
-
-    }
     private void OnTriggerStay(Collider other)
     {
 
@@ -30,7 +24,6 @@ public class DangerOfCollisionStopMoving : MonoBehaviour {
                     carMovement.Speed -= 1f;
                     speed = carMovement.Speed;
                 }
-
             }
             else
             {
@@ -41,24 +34,30 @@ public class DangerOfCollisionStopMoving : MonoBehaviour {
                 }
             }
         }
-    }
-    void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Player"))
+        else if (other.CompareTag("CrazyCar"))
         {
-            carControl = other.GetComponent<CarControl>();
-            carControl.ChangeText("Please Slow down you are too close !");
+            crazyCarMovement = other.GetComponent<CrazyCarMovement>();
+            crazyCarMovement.turnStopOn(crazyCarMovement.stop2);
+            crazyCarMovement.turnStopOn(crazyCarMovement.stop1);
+            if (speed > 1f)
+            {
+                if (crazyCarMovement != null)
+                {
+                    crazyCarMovement.Speed -= 1f;
+                    speed = crazyCarMovement.Speed;
+                }
+            }
+            else
+            {
+                if (crazyCarMovement != null)
+                {
+                    crazyCarMovement.Speed = 0;
+                }
+            }
         }
     }
     private void OnTriggerExit(Collider other)
     {
-
-        if (other.CompareTag("Player"))
-        {
-            carControl = other.GetComponent<CarControl>();
-            //carControl.ChangeText("aaaaaaaaaaaaaa");
-        }
-
         if (other.CompareTag("Bots")) 
         {
             carMovement = other.GetComponent<CarMovement>();
@@ -66,10 +65,12 @@ public class DangerOfCollisionStopMoving : MonoBehaviour {
             carMovement.turnLightsOff(carMovement.stop1);
             carMovement.turnLightsOff(carMovement.stop2);
         }
-    }
-    // Update is called once per frame
-    void Update()
-    {
-
+        else if (other.CompareTag("CrazyCar"))
+        {
+            crazyCarMovement = other.GetComponent<CrazyCarMovement>();
+            crazyCarMovement.Speed = 33f;
+            crazyCarMovement.turnLightsOff(crazyCarMovement.stop1);
+            crazyCarMovement.turnLightsOff(crazyCarMovement.stop2);
+        }
     }
 }

@@ -7,6 +7,7 @@ public class GetInfo : MonoBehaviour {
     public Queue<Collider, int, int, int> Queue;
     public TrafficController trafficController;
     public GameObject gameObjectCross;
+    private CrazyCarMovement crazyCarMovement;
     CarMovement carMovement;
     public bool RightRoad;
     public bool LeftRoad;
@@ -37,24 +38,24 @@ public class GetInfo : MonoBehaviour {
     
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("CrazyCar"))
         {
-            CarControl carControl;
-            carControl = other.GetComponent<CarControl>();
-            if (carControl.rng == 2)
+            crazyCarMovement = other.GetComponent<CrazyCarMovement>();
+            int i = 0;
+            if (RightSigns) i++;
+            if (LeftSigns) i++;
+            if (ForwardSigns) i++;
+            rng = Random.Range(1, i + 1);
+
+            if (RightSigns == false)
             {
-                priority = priorityAccordingToSigns + 1;
+                rng = (rng == 1) ? 2 : 3;
             }
-            else
+            if (LeftSigns == false)
             {
-                priority = priorityAccordingToSigns;
+                rng = (rng == 1) ? 1 : 3;
             }
-            Enqueue(other, carControl.rng, priority, lane);
-            if (Queue.Count() == 1)
-            {
-                trafficController = gameObjectCross.GetComponent<TrafficController>();
-                trafficController.Enqueue(other, carControl.rng, priority, lane);
-            }
+            crazyCarMovement.rng = rng;
         }
 
         if (other.CompareTag("Bots"))

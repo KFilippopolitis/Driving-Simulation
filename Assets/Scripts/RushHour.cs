@@ -26,6 +26,7 @@ public class RushHour : MonoBehaviour {
     public GameObject camera4;
     private int counter = 0;
 
+
     // Use this for initialization
     void Start()
     {
@@ -40,14 +41,7 @@ public class RushHour : MonoBehaviour {
             SwitchCamera(counter);
             counter++;
         }
-        if (Input.GetKeyDown(KeyCode.T))
-        {
-            Time.timeScale = 1.5f;
-        }
-        if (Input.GetKeyDown(KeyCode.PageDown))
-        {
-            Time.timeScale = 0.5f;
-        }
+
         timer = Time.deltaTime + timer;
         if (timer > 5)
         {

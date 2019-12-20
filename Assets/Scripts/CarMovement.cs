@@ -72,7 +72,7 @@ public class CarMovement : MonoBehaviour {
         {
             Speed = 34f;
             turning = -90;
-            if (getpoint >= 100)
+            if (getpoint >= 103)
             {
                 Turn();
                 getpoint = -100000000;
@@ -147,7 +147,4 @@ public class CarMovement : MonoBehaviour {
         turning = -90;
         Turn();
     }
-
-
-
 }

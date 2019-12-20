@@ -5,6 +5,7 @@ using UnityEngine;
 public class TurnAround : MonoBehaviour {
 
     CarMovement carMovement;
+    CrazyCarMovement crazyCarMovement;
 	// Use this for initialization
 	void Start () {
 		
@@ -20,6 +21,11 @@ public class TurnAround : MonoBehaviour {
         {
             carMovement = other.GetComponent<CarMovement>();
             carMovement.turnAround();
+        }
+        else if (other.CompareTag("Bots"))
+        {
+            crazyCarMovement = other.GetComponent<CrazyCarMovement>();
+            crazyCarMovement.turnAround();
         }
     }
 }

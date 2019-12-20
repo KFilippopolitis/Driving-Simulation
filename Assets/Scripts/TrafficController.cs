@@ -5,6 +5,7 @@ using UnityEngine;
 public class TrafficController : MonoBehaviour {
     public PriorityQueue<Collider, int, int, int> priorityQueue;
     private CarMovement carMovement;
+    private CrazyCarMovement crazyCarMovement;
     private int priority;
     public int firstwithpriority = 0;
     public Collider pastcollider;
@@ -40,7 +41,6 @@ public class TrafficController : MonoBehaviour {
     private void OnTriggerEnter(Collider other)
     {
         carMovement = other.GetComponent<CarMovement>();
-
         if (other.CompareTag("Bots"))
         {
             carMovement.getpoint = 0;
@@ -48,13 +48,6 @@ public class TrafficController : MonoBehaviour {
             carMovement.turnStopOn(carMovement.stop1);
             carMovement.turnStopOn(carMovement.stop2);
 
-        }
-        if (other.CompareTag("Player"))
-        {
-            CarControl carControl;
-            carControl = other.GetComponent<CarControl>();
-            carControl.ChangeText("Wait until its ur turn to pass.");
-            
         }
     }
     private void OnTriggerStay(Collider other)
@@ -71,30 +64,17 @@ public class TrafficController : MonoBehaviour {
                 pastcollider = other;
                 lane = priorityQueue.PeekLane();
                 QueueAndDequeue(priorityQueue.PeekLane());
-
             }
-            if (other.CompareTag("Player"))
-            {
-                CarControl carControl;
-                carControl = other.GetComponent<CarControl>();
-                priority = priorityQueue.PeekPriority();
-                if (carControl.rightAlarmEnabled)
-                {
-
-                }
-                pastcollider = other;
-                lane = priorityQueue.PeekLane();
-                QueueAndDequeue(priorityQueue.PeekLane());
-            }
+           
             if (priorityQueue.Count() != 0 )
-            {
-                if (priority != priorityQueue.PeekPriority() || (priority % 2 == 0 && lane != priorityQueue.PeekLane()))
-                {
+                if (priority!= priorityQueue.PeekPriority() || (priority % 2 == 0 && lane != priorityQueue.PeekLane()))
                     firstwithpriority++;
-                }
-            }
         }
-
+        if (other.CompareTag("CrazyCar"))
+        {
+            crazyCarMovement = other.GetComponent<CrazyCarMovement>();
+            crazyCarMovement.state = crazyCarMovement.rng;
+        }
     }
 
     private void OnTriggerExit(Collider other)
@@ -103,16 +83,29 @@ public class TrafficController : MonoBehaviour {
         {
             carMovement = other.GetComponent<CarMovement>();
             carMovement.Speed = 33f;
+            carMovement.state = 4;
             carMovement.count = 0;
+            carMovement.rng = 0;
             carMovement.turnLightsOff(carMovement.leftAlarm);
             carMovement.turnLightsOff(carMovement.leftAlarmBack);
             carMovement.turnLightsOff(carMovement.rightAlarm);
             carMovement.turnLightsOff(carMovement.rightAlarmBack);
-            carMovement.rng = 0;
             if (pastcollider == other)
             {
                 firstwithpriority = 0;
             }
+        }
+        else if(other.CompareTag("CrazyCar"))
+        {
+            crazyCarMovement = other.GetComponent<CrazyCarMovement>();
+            crazyCarMovement.turnLightsOff(crazyCarMovement.leftAlarm);
+            crazyCarMovement.turnLightsOff(crazyCarMovement.leftAlarmBack);
+            crazyCarMovement.turnLightsOff(crazyCarMovement.rightAlarm);
+            crazyCarMovement.turnLightsOff(crazyCarMovement.rightAlarmBack);
+            crazyCarMovement.Speed = 33f;
+            crazyCarMovement.state = 4;
+            crazyCarMovement.rng = 0;
+            crazyCarMovement.count = 0;
         }
     }
 

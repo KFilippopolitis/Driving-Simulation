@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class RESPAWN : MonoBehaviour {
 
-    [SerializeField] private Transform player;
-    [SerializeField] private Transform respawingpoint;
+    private Transform player;
+    private Transform respawingpoint;
 
 
 
