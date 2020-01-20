@@ -29,12 +29,6 @@ public class GetInfo : MonoBehaviour {
     {
        Queue = new Queue<Collider, int, int, int>();
     }
-
-    // Update is called once per frame
-    void Update () {
-       
-       
-	}
     
     private void OnTriggerEnter(Collider other)
     {
@@ -42,19 +36,15 @@ public class GetInfo : MonoBehaviour {
         {
             crazyCarMovement = other.GetComponent<CrazyCarMovement>();
             int i = 0;
-            if (RightSigns) i++;
-            if (LeftSigns) i++;
-            if (ForwardSigns) i++;
+            if (RightRoad) i++;
+            if (LeftRoad) i++;
+            if (ForwardRoad) i++;
             rng = Random.Range(1, i + 1);
 
-            if (RightSigns == false)
-            {
+            if (RightRoad == false)
                 rng = (rng == 1) ? 2 : 3;
-            }
-            if (LeftSigns == false)
-            {
+            if (LeftRoad == false)
                 rng = (rng == 1) ? 1 : 3;
-            }
             crazyCarMovement.rng = rng;
         }
 
@@ -70,22 +60,14 @@ public class GetInfo : MonoBehaviour {
             rng = Random.Range(1, i + 1);
 
             if (RightResult == false)
-            {
                 rng = (rng == 1) ? 2 : 3;
-            }
             if (LeftResult == false)
-            {
                 rng = (rng == 1) ? 1 : 3;
-            }
 
             if (rng == 2)
-            {
                 priority = priorityAccordingToSigns + 1;
-            }
             else
-            {
                 priority = priorityAccordingToSigns;
-            }
 
             Enqueue(other, rng, priority, lane);
             carMovement = other.GetComponent<CarMovement>();
