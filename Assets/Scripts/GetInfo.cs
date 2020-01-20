@@ -4,7 +4,7 @@ using UnityEngine;
 
 
 public class GetInfo : MonoBehaviour {
-    public Queue<Collider, int, int, int> Queue;
+    public Queue<Collider, int, int, int> laneQueue;
     public TrafficController trafficController;
     public GameObject gameObjectCross;
     private CrazyCarMovement crazyCarMovement;
@@ -18,7 +18,7 @@ public class GetInfo : MonoBehaviour {
     public bool RightResult;
     public bool LeftResult;
     public bool ForwardResult;
-    public int rng;
+    public int randomDirection;
     public int priorityAccordingToSigns;
     public int priority;
     public int lane;
@@ -27,28 +27,31 @@ public class GetInfo : MonoBehaviour {
     // Use this for initialization
     void Start ()
     {
-       Queue = new Queue<Collider, int, int, int>();
+       laneQueue = new Queue<Collider, int, int, int>();
     }
-    
-    private void OnTriggerEnter(Collider other)
+    //Here we settle what priority each Bot has.
+    //The priority get decided by priorityAccordingToSigns(which is the priority that a Bot has according to the sign) and randomDirection(which is the direction that the bot will take).
+    //If a bot is going to keep on going forward or turn right then its priority is the same as the priorityAccordingToSigns but if a bot is going to turn left then its priority is going to be priorityAccordingToSigns+1.
+    //For example if a Bot A's  priorityAccordingToSigns is 2 because a different bot has highier priority  and its intenting to turn left then its priority is equal to 3.
+    private void OnTriggerEnter(Collider car)
     {
-        if (other.CompareTag("CrazyCar"))
+        if (car.CompareTag("CrazyCar"))
         {
-            crazyCarMovement = other.GetComponent<CrazyCarMovement>();
+            crazyCarMovement = car.GetComponent<CrazyCarMovement>();
             int i = 0;
             if (RightRoad) i++;
             if (LeftRoad) i++;
             if (ForwardRoad) i++;
-            rng = Random.Range(1, i + 1);
+            randomDirection = Random.Range(1, i + 1);
 
             if (RightRoad == false)
-                rng = (rng == 1) ? 2 : 3;
+                randomDirection = (randomDirection == 1) ? 2 : 3;
             if (LeftRoad == false)
-                rng = (rng == 1) ? 1 : 3;
-            crazyCarMovement.rng = rng;
+                randomDirection = (randomDirection == 1) ? 1 : 3;
+            crazyCarMovement.rng = randomDirection;
         }
 
-        if (other.CompareTag("Bots"))
+        if (car.CompareTag("Bots"))
         {
             RightResult = (RightRoad && RightSigns) ? true : false;
             LeftResult = (LeftRoad && LeftSigns) ? true : false;
@@ -57,37 +60,37 @@ public class GetInfo : MonoBehaviour {
             if (RightResult) i++;
             if (LeftResult) i++;
             if (ForwardResult) i++;
-            rng = Random.Range(1, i + 1);
+            randomDirection = Random.Range(1, i + 1);
 
             if (RightResult == false)
-                rng = (rng == 1) ? 2 : 3;
+                randomDirection = (randomDirection == 1) ? 2 : 3;
             if (LeftResult == false)
-                rng = (rng == 1) ? 1 : 3;
+                randomDirection = (randomDirection == 1) ? 1 : 3;
 
-            if (rng == 2)
+            if (randomDirection == 2)
                 priority = priorityAccordingToSigns + 1;
             else
                 priority = priorityAccordingToSigns;
 
-            Enqueue(other, rng, priority, lane);
-            carMovement = other.GetComponent<CarMovement>();
+            Enqueue(car, randomDirection, priority, lane);
+            carMovement = car.GetComponent<CarMovement>();
             carMovement.prio = priority;
-            carMovement.rng = rng;
-            if (Queue.Count() == 1)
+            carMovement.rng = randomDirection;
+            if (laneQueue.Count() == 1)
             {
                 trafficController = gameObjectCross.GetComponent<TrafficController>();
-                trafficController.Enqueue(other, rng, priority, lane);
+                trafficController.Enqueue(car, randomDirection, priority, lane);
             }
         }
     }
     public void Dequeue()
     {
-        Queue.Dequeque();
+        laneQueue.Dequeue();
     }
 
     public void Enqueue(Collider name, int rng, int prio, int lane)
     {
-        Queue.Enqueue(name, rng, prio, lane);
+        laneQueue.Enqueue(name, rng, prio, lane);
     }
    
 }
