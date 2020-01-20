@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class onClickButton : MonoBehaviour {
+public class ButtonHandler : MonoBehaviour {
 
     public GameObject crazyCar;
 	public void onClickButton ()

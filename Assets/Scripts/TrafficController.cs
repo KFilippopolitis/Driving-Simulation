@@ -3,45 +3,55 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class TrafficController : MonoBehaviour {
-    public PriorityQueue<Collider, int, int, int> crossQueue;
+    public PriorityQueue<Collider, int, int, int> priorityQueue;
     private CarMovement carMovement;
     private CrazyCarMovement crazyCarMovement;
     private int priority;
-    public int carCanMove = 1;
-    public Collider carInTheIntersection;
+    public int firstwithpriority = 0;
+    public Collider pastcollider;
+    public Collider col;
     public GameObject lane1;
     public GameObject lane2;
     public GameObject lane3;
     public GameObject lane4;
-    GetInfo laneQueue1;
-    GetInfo laneQueue2;
-    GetInfo laneQueue3;
-    GetInfo laneQueue4;
+    GetInfo getInfo1;
+    GetInfo getInfo2;
+    GetInfo getInfo3;
+    GetInfo getInfo4;
+    public int count = 0;
     private int lane;
 
+    private void Update()
+    {
+        if (priorityQueue.Count() != 0)
+        {
+            count = priorityQueue.Count();
+            col = priorityQueue.PeekName();
+        }
+    }
     void Start()
     {
-        crossQueue = new PriorityQueue<Collider, int, int, int>();
-        laneQueue1 = lane1.GetComponent<GetInfo>();
-        laneQueue2 = lane2.GetComponent<GetInfo>();
-        laneQueue3 = lane3.GetComponent<GetInfo>();
-        laneQueue4 = lane4.GetComponent<GetInfo>();
+        priorityQueue = new PriorityQueue<Collider, int, int, int>();
+        getInfo1 = lane1.GetComponent<GetInfo>();
+        getInfo2 = lane2.GetComponent<GetInfo>();
+        getInfo3 = lane3.GetComponent<GetInfo>();
+        getInfo4 = lane4.GetComponent<GetInfo>();
     }
 
-    private void OnTriggerEnter(Collider car)
+    private void OnTriggerEnter(Collider other)
     {
-        if (car.CompareTag("Bots"))
+        if (other.CompareTag("Bots"))
         {
-            carMovement = car.GetComponent<CarMovement>();
+            carMovement = other.GetComponent<CarMovement>();
             carMovement.getpoint = 0;
             carMovement.Speed = 0;
             carMovement.turnStopOn(carMovement.stop1);
             carMovement.turnStopOn(carMovement.stop2);
 
         }
-        else if (car.CompareTag("CrazyCar"))
+        if (other.CompareTag("CrazyCar"))
         {
-            crazyCarMovement= car.GetComponent<CrazyCarMovement>();
+            crazyCarMovement= other.GetComponent<CrazyCarMovement>();
             crazyCarMovement.getpoint = 0;
             crazyCarMovement.speed = 0;
             crazyCarMovement.turnStopOn(crazyCarMovement.stop1);
@@ -49,38 +59,38 @@ public class TrafficController : MonoBehaviour {
 
         }
     }
-    private void OnTriggerStay(Collider car)
+    private void OnTriggerStay(Collider other)
     {
-        carMovement = car.GetComponent<CarMovement>();
-        if (crossQueue.Count() != 0 && car == crossQueue.PeekName() && carCanMove == 1)
+        carMovement = other.GetComponent<CarMovement>();
+        if (priorityQueue.Count() != 0 && other == priorityQueue.PeekName() && firstwithpriority == 0)
         {
-            if (car.CompareTag("Bots"))
+            if (other.CompareTag("Bots"))
             { 
-                priority = crossQueue.PeekPriority();
-                carMovement.state = crossQueue.PeekRng();
+                priority = priorityQueue.PeekPriority();
+                carMovement.state = priorityQueue.PeekRng();
                 carMovement.turnLightsOff(carMovement.stop1);
                 carMovement.turnLightsOff(carMovement.stop2);
-                carInTheIntersection = car;
-                lane = crossQueue.PeekLane();
-                carIsInTheIntersection(lane);
+                pastcollider = other;
+                lane = priorityQueue.PeekLane();
+                QueueAndDequeue(priorityQueue.PeekLane());
             }
            
-            if (crossQueue.Count() != 0 )
-                if (priority!= crossQueue.PeekPriority() || ((priority % 2 == 0 )&& (lane != crossQueue.PeekLane())))
-                    carCanMove=0;
+            if (priorityQueue.Count() != 0 )
+                if (priority!= priorityQueue.PeekPriority() || (priority % 2 == 0 && lane != priorityQueue.PeekLane()))
+                    firstwithpriority++;
         }
-        if (car.CompareTag("CrazyCar"))
+        if (other.CompareTag("CrazyCar"))
         {
-            crazyCarMovement = car.GetComponent<CrazyCarMovement>();
+            crazyCarMovement = other.GetComponent<CrazyCarMovement>();
             crazyCarMovement.state = crazyCarMovement.rng;
         }
     }
 
-    private void OnTriggerExit(Collider car)
+    private void OnTriggerExit(Collider other)
     {
-        if (car.CompareTag("Bots"))
+        if (other.CompareTag("Bots"))
         {
-            carMovement = car.GetComponent<CarMovement>();
+            carMovement = other.GetComponent<CarMovement>();
             carMovement.Speed = 33f;
             carMovement.state = 4;
             carMovement.count = 0;
@@ -89,61 +99,71 @@ public class TrafficController : MonoBehaviour {
             carMovement.turnLightsOff(carMovement.leftAlarmBack);
             carMovement.turnLightsOff(carMovement.rightAlarm);
             carMovement.turnLightsOff(carMovement.rightAlarmBack);
-            if (carInTheIntersection == car)
+            if (pastcollider == other)
             {
-                carCanMove = 1;
+                firstwithpriority = 0;
             }
         }
-        else if(car.CompareTag("CrazyCar"))
+        else if(other.CompareTag("CrazyCar"))
         {
-            crazyCarMovement = car.GetComponent<CrazyCarMovement>();
-            crazyCarMovement.speed = 33f;
-            crazyCarMovement.state = 4;
-            crazyCarMovement.count = 0;
-            crazyCarMovement.rng = 0;
+            crazyCarMovement = other.GetComponent<CrazyCarMovement>();
             crazyCarMovement.turnLightsOff(crazyCarMovement.leftAlarm);
             crazyCarMovement.turnLightsOff(crazyCarMovement.leftAlarmBack);
             crazyCarMovement.turnLightsOff(crazyCarMovement.rightAlarm);
             crazyCarMovement.turnLightsOff(crazyCarMovement.rightAlarmBack);
+            crazyCarMovement.speed = 33f;
+            crazyCarMovement.state = 4;
+            crazyCarMovement.rng = 0;
+            crazyCarMovement.count = 0;
         }
     }
 
-    private void carIsInTheIntersection (int lane)
+    public void Dequeue()
     {
-        if (lane == laneQueue1.lane)
+        priorityQueue.Dequeque();
+    }
+
+    public void Enqueue(Collider name, int rng, int prio, int lane)
+    {
+        priorityQueue.Enqueue(name, rng, prio, lane);
+    }
+
+    private void QueueAndDequeue (int lane)
+    {
+        if (lane == getInfo1.lane)
         {
-            crossQueue.Dequeue();
-            laneQueue1.Dequeue();
-            if (laneQueue1.Queue.Count() != 0)
+            Dequeue();
+            getInfo1.Dequeue();
+            if (getInfo1.Queue.Count() != 0)
             {
-                crossQueue.Enqueue(laneQueue1.Queue.PeekName(), laneQueue1.Queue.PeekRng(), laneQueue1.Queue.PeekPriority(), laneQueue1.Queue.PeekLane());
+                Enqueue(getInfo1.Queue.PeekName(), getInfo1.Queue.PeekRng(), getInfo1.Queue.PeekPriority(), getInfo1.Queue.PeekLane());
             }
         }
-        else if (lane == laneQueue2.lane)
+        else if (lane == getInfo2.lane)
         {
-            crossQueue.Dequeue();
-            laneQueue2.Dequeue();
-            if (laneQueue2.Queue.Count() != 0)
+            Dequeue();
+            getInfo2.Dequeue();
+            if (getInfo2.Queue.Count() != 0)
             {
-                crossQueue.Enqueue(laneQueue2.Queue.PeekName(), laneQueue2.Queue.PeekRng(), laneQueue2.Queue.PeekPriority(), laneQueue2.Queue.PeekLane());
+                Enqueue(getInfo2.Queue.PeekName(), getInfo2.Queue.PeekRng(), getInfo2.Queue.PeekPriority(), getInfo2.Queue.PeekLane());
             }
         }
-        else if (lane == laneQueue3.lane)
+        else if (lane == getInfo3.lane)
         {
-            crossQueue.Dequeue();
-            laneQueue3.Dequeue();
-            if (laneQueue3.Queue.Count() != 0)
+            Dequeue();
+            getInfo3.Dequeue();
+            if (getInfo3.Queue.Count() != 0)
             {
-                crossQueue.Enqueue(laneQueue3.Queue.PeekName(), laneQueue3.Queue.PeekRng(), laneQueue3.Queue.PeekPriority(), laneQueue3.Queue.PeekLane());
+                Enqueue(getInfo3.Queue.PeekName(), getInfo3.Queue.PeekRng(), getInfo3.Queue.PeekPriority(), getInfo3.Queue.PeekLane());
             }
         }
-        else if (lane == laneQueue4.lane)
+        else if (lane == getInfo4.lane)
         {
-            crossQueue.Dequeue();
-            laneQueue4.Dequeue();
-            if (laneQueue4.Queue.Count() != 0)
+            Dequeue();
+            getInfo4.Dequeue();
+            if (getInfo4.Queue.Count() != 0)
             {
-                crossQueue.Enqueue(laneQueue4.Queue.PeekName(), laneQueue4.Queue.PeekRng(), laneQueue4.Queue.PeekPriority(), laneQueue4.Queue.PeekLane());
+                Enqueue(getInfo4.Queue.PeekName(), getInfo4.Queue.PeekRng(), getInfo4.Queue.PeekPriority(), getInfo4.Queue.PeekLane());
             }
         }
     }
