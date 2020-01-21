@@ -6,8 +6,8 @@ using UnityEngine.UI;
 public class CarMovement : MonoBehaviour {
 
     
-    public float Speed ;                 
-    private Rigidbody Rigidbody;              
+    public float Speed ;                 // How fast the car moves forward and back.
+    private Rigidbody Rigidbody;              // Reference used to move the car.
     private int turning ;
     public int state=4;
     private int temp=0;
@@ -26,8 +26,11 @@ public class CarMovement : MonoBehaviour {
         Rigidbody = GetComponent<Rigidbody>();
     }
     
+
+
     private void FixedUpdate()
     {
+        
         Move();
         getpoint = Speed * Time.deltaTime+getpoint;        
     }
@@ -36,17 +39,24 @@ public class CarMovement : MonoBehaviour {
         
         if (rng == 1)
         {
+           
             turnAlarmOn(rightAlarm);
             turnAlarmOn(rightAlarmBack);
         }
         else if (rng == 2)
         {
+           
             turnAlarmOn(leftAlarm);
             turnAlarmOn(leftAlarmBack);
+
         }
 
+
         if (temp!=state)
+        {
             temp = state;
+        }
+
         if (state == 1)
         {
             Speed = 33f;
@@ -56,6 +66,7 @@ public class CarMovement : MonoBehaviour {
                 Turn();
                 getpoint = -100000000;
             }
+                
         }
         else if (state == 2)
         {
@@ -65,16 +76,26 @@ public class CarMovement : MonoBehaviour {
             {
                 Turn();
                 getpoint = -100000000;
+
             }
+
         }
         else if (state == 3)
+        {
             Speed = 34f;
+        }
+
     }
                 
     private void Move()
     {
+
+        // Create a vector in the direction the tank is facing with a magnitude based on the input, speed and the time between frames.
         Vector3 movement = transform.forward * Speed * Time.deltaTime ;
+
+        // Apply this movement to the rigidbody's position.
         Rigidbody.MovePosition(Rigidbody.position + movement);
+
     }
 
     
@@ -111,11 +132,14 @@ public class CarMovement : MonoBehaviour {
         turnLightsOff(leftAlarmBack);
         turnLightsOff(rightAlarm);
         turnLightsOff(rightAlarmBack);
+
     }
     private void Turn()
     {
+        
         Quaternion turnRotation = Quaternion.Euler(0f, turning, 0f);
         Rigidbody.MoveRotation(Rigidbody.rotation * turnRotation);
+
     }
 
     public void turnAround()

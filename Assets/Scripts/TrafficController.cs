@@ -40,22 +40,13 @@ public class TrafficController : MonoBehaviour {
 
     private void OnTriggerEnter(Collider other)
     {
+        carMovement = other.GetComponent<CarMovement>();
         if (other.CompareTag("Bots"))
         {
-            carMovement = other.GetComponent<CarMovement>();
             carMovement.getpoint = 0;
             carMovement.Speed = 0;
             carMovement.turnStopOn(carMovement.stop1);
             carMovement.turnStopOn(carMovement.stop2);
-
-        }
-        if (other.CompareTag("CrazyCar"))
-        {
-            crazyCarMovement= other.GetComponent<CrazyCarMovement>();
-            crazyCarMovement.getpoint = 0;
-            crazyCarMovement.speed = 0;
-            crazyCarMovement.turnStopOn(crazyCarMovement.stop1);
-            crazyCarMovement.turnStopOn(crazyCarMovement.stop2);
 
         }
     }
@@ -111,7 +102,7 @@ public class TrafficController : MonoBehaviour {
             crazyCarMovement.turnLightsOff(crazyCarMovement.leftAlarmBack);
             crazyCarMovement.turnLightsOff(crazyCarMovement.rightAlarm);
             crazyCarMovement.turnLightsOff(crazyCarMovement.rightAlarmBack);
-            crazyCarMovement.speed = 33f;
+            crazyCarMovement.Speed = 33f;
             crazyCarMovement.state = 4;
             crazyCarMovement.rng = 0;
             crazyCarMovement.count = 0;
@@ -126,6 +117,11 @@ public class TrafficController : MonoBehaviour {
     public void Enqueue(Collider name, int rng, int prio, int lane)
     {
         priorityQueue.Enqueue(name, rng, prio, lane);
+    }
+
+    public void getYourTime()
+    {
+        firstwithpriority = 0;
     }
 
     private void QueueAndDequeue (int lane)

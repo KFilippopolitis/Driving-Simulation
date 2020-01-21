@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class CrazyCarMovement : MonoBehaviour {
-    public float timer;
-    public float speed;                
-    private Rigidbody Rigidbody;              
+
+    public float Speed;                 // How fast the car moves forward and back.
+    private Rigidbody Rigidbody;              // Reference used to move the car.
     private int turning;
     public int state = 4;
+    private int temp = 0;
     public GameObject rightAlarm;
     public GameObject leftAlarm;
     public GameObject rightAlarmBack;
@@ -24,20 +25,17 @@ public class CrazyCarMovement : MonoBehaviour {
     }
 
 
+
     private void FixedUpdate()
     {
+
         Move();
-        getpoint = speed * Time.deltaTime + getpoint;
-        timer = Time.deltaTime*2 + timer;
-        if (timer > 4f)
-        {
-            speed = Random.Range(40, 100 + 1);
-            timer = 0;
-        }
+        getpoint = Speed * Time.deltaTime + getpoint;
     }
 
     void Update()
     {
+
         if (rng == 1)
         {
             turnAlarmOn(rightAlarm);
@@ -51,7 +49,7 @@ public class CrazyCarMovement : MonoBehaviour {
         
         if (state == 1)
         {
-            speed = 33f;
+            Speed = 33f;
             turning = 90;
             if (getpoint >= 75)
             {
@@ -61,7 +59,7 @@ public class CrazyCarMovement : MonoBehaviour {
         }
         else if (state == 2)
         {
-            speed = 34f;
+            Speed = 34f;
             turning = -90;
             if (getpoint >= 103)
             {
@@ -70,12 +68,15 @@ public class CrazyCarMovement : MonoBehaviour {
             }
         }
         else if (state == 3)
-            speed = 34f;
+            Speed = 34f;
     }
 
     private void Move()
     {
-        Vector3 movement = transform.forward * speed * Time.deltaTime;
+        // Create a vector in the direction the tank is facing with a magnitude based on the input, speed and the time between frames.
+        Vector3 movement = transform.forward * Speed * Time.deltaTime;
+
+        // Apply this movement to the rigidbody's position.
         Rigidbody.MovePosition(Rigidbody.position + movement);
     }
 
@@ -114,11 +115,14 @@ public class CrazyCarMovement : MonoBehaviour {
         turnLightsOff(leftAlarmBack);
         turnLightsOff(rightAlarm);
         turnLightsOff(rightAlarmBack);
+
     }
     private void Turn()
     {
+
         Quaternion turnRotation = Quaternion.Euler(0f, turning, 0f);
         Rigidbody.MoveRotation(Rigidbody.rotation * turnRotation);
+
     }
 
     public void turnAround()

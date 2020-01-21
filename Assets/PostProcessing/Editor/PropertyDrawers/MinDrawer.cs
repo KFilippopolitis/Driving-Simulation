@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.PostProcessing;
-using MinAttribute = UnityEngine.PostProcessing.MinAttribute;
 
 namespace UnityEditor.PostProcessing
 {
@@ -26,6 +25,5 @@ namespace UnityEditor.PostProcessing
                 EditorGUI.LabelField(position, label.text, "Use Min with float or int.");
             }
         }
-
     }
 }

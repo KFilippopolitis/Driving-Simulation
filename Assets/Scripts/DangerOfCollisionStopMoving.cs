@@ -34,6 +34,27 @@ public class DangerOfCollisionStopMoving : MonoBehaviour {
                 }
             }
         }
+        else if (other.CompareTag("CrazyCar"))
+        {
+            crazyCarMovement = other.GetComponent<CrazyCarMovement>();
+            crazyCarMovement.turnStopOn(crazyCarMovement.stop2);
+            crazyCarMovement.turnStopOn(crazyCarMovement.stop1);
+            if (speed > 1f)
+            {
+                if (crazyCarMovement != null)
+                {
+                    crazyCarMovement.Speed -= 1f;
+                    speed = crazyCarMovement.Speed;
+                }
+            }
+            else
+            {
+                if (crazyCarMovement != null)
+                {
+                    crazyCarMovement.Speed = 0;
+                }
+            }
+        }
     }
     private void OnTriggerExit(Collider other)
     {
@@ -47,7 +68,7 @@ public class DangerOfCollisionStopMoving : MonoBehaviour {
         else if (other.CompareTag("CrazyCar"))
         {
             crazyCarMovement = other.GetComponent<CrazyCarMovement>();
-            crazyCarMovement.speed = 33f;
+            crazyCarMovement.Speed = 33f;
             crazyCarMovement.turnLightsOff(crazyCarMovement.stop1);
             crazyCarMovement.turnLightsOff(crazyCarMovement.stop2);
         }
