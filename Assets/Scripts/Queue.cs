@@ -25,7 +25,7 @@ public class Queue<Tname, Trng, TPriority,Tlane> where TPriority : IComparable<T
         name.Add(nameItem);
         lane.Add(laneItem);
     }
-    public void Dequeque()
+    public void Dequeue()
     {
         priority.RemoveAt(0);
         name.RemoveAt(0);
