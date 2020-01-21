@@ -6,9 +6,8 @@ using UnityEngine.UI;
 public class ButtonHandler : MonoBehaviour {
 
     public GameObject crazyCar;
-	public void releaseCrazyCar ()
+	public void onClickButton ()
     {
         crazyCar.SetActive(true);
-        gameObject.SetActive(false);
     }
 }

@@ -2,13 +2,24 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CarAccident : MonoBehaviour {
+public class CarAccident : MonoBehaviour
+{
     public GameObject fire;
-
+    public GameObject crazyCarFire;
+    public GameObject bot;
+    CarMovement carMovement;
+    CrazyCarMovement crazyCarMovement;
     private void OnTriggerEnter(Collider other)
     {
-        fire.SetActive(true);
-        fire.transform.position = other.transform.position;
-        fire.transform.Translate(0, 6, -10);
+        carMovement = bot.GetComponent<CarMovement>();
+        crazyCarMovement = other.GetComponent<CrazyCarMovement>();
+
+        if (other.CompareTag("CrazyCar"))
+        {
+            fire.SetActive(true);
+            crazyCarFire.SetActive(true);
+            carMovement.enabled = false;
+            crazyCarMovement.enabled = false;
+        }
     }
 }

@@ -8,6 +8,10 @@ TagManager:
   - GetInfo
   - Cross
   - CrazyCar
+  - First Wave
+  - Second Wave
+  - Third Wave
+  - Forth Wave
   layers:
   - Default
   - TransparentFX
