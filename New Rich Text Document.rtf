@@ -1,0 +1,465 @@
+{\rtf1\ansi\ansicpg1253\deff0\nouicompat{\fonttbl{\f0\fnil Consolas;}{\f1\fnil\fcharset161 Calibri;}{\f2\fnil\fcharset0 Calibri;}{\f3\fnil\fcharset0 Consolas;}{\f4\fnil\fcharset161 Consolas;}}
+{\colortbl ;\red0\green128\blue0;\red0\green0\blue0;\red0\green0\blue255;\red43\green145\blue175;\red163\green21\blue21;}
+{\*\generator Riched20 10.0.18362}\viewkind4\uc1 
+\pard\sa200\sl276\slmult1\cf1\f0\fs19\lang1032 //Here we settle what priority each Bot has.\cf2\par
+    \cf1 //The priority get decided by priorityAccordingToSigns(which is the priority that a Bot has according to the sign) and randomDirection(which is the direction that the bot will take).\cf2\par
+    \cf1 //If a bot is going to keep on going forward or turn right then its priority is the same as the priorityAccordingToSigns but if a bot is going to turn left then its priority is going to be priorityAccordingToSigns+1.\cf2\par
+    \cf1 //For example if a Bot A's  priorityAccordingToSigns is 2 because a different bot has highier priority  and its intenting to turn left then its priority is equal to 3.\cf0\f1\fs22\par
+\'ca\'eb\'dc\'f3\'e7 \f2\lang9 CarAccident: \par
+\cf3\f0\fs19 public\cf2  \cf3 class\cf2  \cf4 CarAccident\cf2  : MonoBehaviour\par
+\{\par
+    \cf3 public\cf2  GameObject fire;\par
+    \cf3 public\cf2  GameObject crazyCarFire;\par
+    \cf3 public\cf2  GameObject bot;\par
+    CarMovement carMovement;\par
+    CrazyCarMovement crazyCarMovement;\par
+    \cf3 private\cf2  \cf3 void\cf2  OnTriggerEnter(Collider other)\par
+    \{\par
+        carMovement = bot.GetComponent<CarMovement>();\par
+        crazyCarMovement = other.GetComponent<CrazyCarMovement>();\par
+\par
+        \cf3 if\cf2  (other.CompareTag(\cf5 "CrazyCar"\cf2 ))\par
+        \{\par
+            fire.SetActive(\cf3 true\cf2 );\par
+            crazyCarFire.SetActive(\cf3 true\cf2 );\par
+            carMovement.enabled = \cf3 false\cf2 ;\par
+            crazyCarMovement.enabled = \cf3 false\cf2 ;\par
+        \}\par
+    \}\par
+\}\cf0\f2\fs22\par
+\f1\lang1032\'d4\'e9 \'c5\'ee\'f5\'f0\'e7\'f1\'e5\'f4\'e5\'df; \par
+\'c7 \'eb\'e5\'e9\'f4\'ef\'f5\'f1\'e3\'df\'e1 \'f4\'ef\'f5 \f2\lang9 CarAccident \f1\lang1032\'e5\'df\'ed\'e1\'e9  \'ed\'e1 \'e5\'f0\'e9\'e4\'e5\'e9\'ea\'ed\'e5\'e9\f2\lang1033  \f1\lang1032 (\'ec\'e5\'f3\'e1 \'e1\'f0\'ef \'e5\'ed\'e1 \f2\lang1033 animation \f1\lang1032\'f6\'f9\'f4\'e9\'e1\'f2)\f2\lang1033  \f1\lang1032\'f0\'ef\'f4\'e5 \'f4\'ef \f2\lang1033 Box collider\f1\lang1032  \'e5\'ed\'ef\'f2 \'e1\'f0\'ef \'f4\'e1 \f2\lang1033 Bot \f1\lang1032\'ea\'e1\'ed\'e5\'e9 \f2\lang1033  collision \f1\lang1032\'ec\'e5 \f2\lang1033 Box collider\f1\lang1032  \'e1\'f0\'ef \'f4\'ef \f2\lang1033 crazyCar.\par
+\par
+\par
+\f1\lang1032\'ca\'eb\'dc\'f3\'e7 \f2\lang1033 Queue :\par
+\par
+\cf2\f0\fs19\par
+\cf3 public\cf2  \cf3 class\cf2  \cf4 Queue\cf2 <\cf4 Tname\cf2 , \cf4 Trng\cf2 , \cf4 TPriority\cf2 ,\cf4 Tlane\cf2 > \cf3 where\cf2  TPriority : IComparable<TPriority>\par
+\{\par
+    List<TPriority> priority;\par
+    List<Trng> rng;\par
+    List<Tname> name;\par
+    List<Tlane> lane;\par
+\par
+    \cf3 public\cf2  \cf4 Queue\cf2 ()\par
+    \{\par
+        \cf3 this\cf2 .priority = \cf3 new\cf2  List<TPriority>();\par
+        \cf3 this\cf2 .rng = \cf3 new\cf2  List<Trng>();\par
+        \cf3 this\cf2 .name = \cf3 new\cf2  List<Tname>();\par
+        \cf3 this\cf2 .lane = \cf3 new\cf2  List<Tlane>();\par
+    \}\par
+    \cf3 public\cf2  \cf3 void\cf2  Enqueue(Tname nameItem, Trng rngItem, TPriority priorityItem,Tlane laneItem)\par
+    \{\par
+        priority.Add(priorityItem);\par
+        rng.Add(rngItem);\par
+        name.Add(nameItem);\par
+        lane.Add(laneItem);\par
+    \}\par
+    \cf3 public\cf2  \cf3 void\cf2  Dequeque()\par
+    \{\par
+        priority.RemoveAt(0);\par
+        name.RemoveAt(0);\par
+        rng.RemoveAt(0);\par
+        lane.RemoveAt(0);\par
+    \}\par
+    \cf3 public\cf2  TPriority PeekPriority()\par
+    \{\par
+        TPriority frontItem = priority[0];\par
+        \cf3 return\cf2  frontItem;\par
+    \}\par
+    \cf3 public\cf2  Trng PeekRng()\par
+    \{\par
+        Trng frontItem = rng[0];\par
+        \cf3 return\cf2  frontItem;\par
+    \}\par
+    \cf3 public\cf2  Tname PeekName()\par
+    \{\par
+        Tname frontItem = name[0];\par
+        \cf3 return\cf2  frontItem;\par
+    \}\par
+    \cf3 public\cf2  Tlane PeekLane()\par
+    \{\par
+        Tlane frontItem = lane[0];\par
+        \cf3 return\cf2  frontItem;\par
+    \}\par
+    \cf3 public\cf2  \cf3 int\cf2  Count() \{ \cf3 return\cf2  priority.Count; \}\par
+   \par
+\}\cf0\f2\fs22\par
+\par
+\f1\lang1032\'d4\'e9 \'c5\'ee\'f5\'f0\'e7\'f1\'e5\'f4\'e5\'df; \par
+\'c7 \'eb\'e5\'e9\'f4\'ef\'f5\'f1\'e3\'df\'e1 \'f4\'ef\'f5 \f2\lang9 Queue\f1\lang1032  \'e5\'e9\'ed\'e1\'e9 \'e7 \'f7\'f1\'de\'f3\'e7 \'f4\'e7\'f2 \'e4\'ef\'ec\'de\'f2 \'e4\'e5\'e4\'ef\'ec\'dd\'ed\'f9\'ed \'d3\'e5\'df\'f1\'e1.\par
+\'d3\'f5\'ed\'e1\'f1\'f4\'e7\'f3\'e7  \cf2\f0\fs19\lang1033 Enqueue\f3 :\cf0\f1\fs22\lang1032\par
+\cf2\f0\fs19\lang1033\par
+\cf3 public\cf2  \cf3 void\cf2  Enqueue(Tname nameItem, Trng rngItem, TPriority priorityItem,Tlane laneItem)\par
+\{\par
+        priority.Add(priorityItem);\par
+        rng.Add(rngItem);\par
+        name.Add(nameItem);\par
+        lane.Add(laneItem);\par
+ \}\par
+\par
+\cf0\f1\fs22\lang1032\'d4\'e9 \'c5\'ee\'f5\'f0\'e7\'f1\'e5\'f4\'e5\'df; \par
+\'c7 \'eb\'e5\'e9\'f4\'ef\'f5\'f1\'e3\'df\'e1 \'f4\'e7\'f2  \cf2\f0\fs19\lang1033 Enqueue\f4\lang1032  \'e5\'e9\'ed\'e1\'e9 \'ed\'e1 \'e1\'f0\'ef\'e8\'e7\'ea\'e5\'f5\'e5\'e9 \'ec\'e5\'f3\'e1 \'f3\'f4\'e7\'ed \f3\lang1033 Queue\f4\lang1032  \'ed\'e5\'e1 \'e4\'e5\'e4\'ef\'ec\'e5\'ed\'e1 \'ea\'e1\'e9 \'ed\'e1 \'f4\'e1 \'f4\'ef\'f0\'ef\'e8\'e5\'f4\'e5\'e9\f3\lang1033  \f4\lang1032\'f3\'f4\'ef \'f4\'e5\'eb\'e5\'f5\'f4\'e1\'e9\'ef \'ea\'e5\'eb\'de \'f4\'e7\'f2 \f3\lang1033 Queue.\par
+\par
+\f0\par
+\cf0\f1\fs22\lang1032\'d3\'f5\'ed\'e1\'f1\'f4\'e7\'f3\'e7 \cf2\f0\fs19\lang1033 Dequeque\f3 :\cf0\f1\fs22\lang1032\par
+\cf3\f0\fs19\lang1033 public\cf2  \cf3 void\cf2  Dequeque()\par
+\{\par
+        priority.RemoveAt(0);\par
+        name.RemoveAt(0);\par
+        rng.RemoveAt(0);\par
+        lane.RemoveAt(0);\par
+\}\par
+\par
+\cf0\f1\fs22\lang1032\'d4\'e9 \'c5\'ee\'f5\'f0\'e7\'f1\'e5\'f4\'e5\'df; \par
+\'c7 \'eb\'e5\'e9\'f4\'ef\'f5\'f1\'e3\'df\'e1 \'f4\'e7\'f2  \cf2\f0\fs19\lang1033 Dequeque\f3  \f4\lang1032\'e5\'e9\'ed\'e1\'e9 \'ed\'e1 \'e4\'e9\'e1\'e3\'f1\'dc\'f6\'e5\'e9 \'f4\'ef \'f0\'f1\'f9\'f4\'ef \'ea\'e5\'eb\'e7 \'f4\'e7\'f2 \f3\lang1033 Queue\f4\lang1032  \f3\lang1033 .\cf0\f1\fs22\lang1032\par
+\par
+\par
+\'d3\'f5\'ed\'e1\'f1\'f4\'e7\'f3\'e7  \cf2\f0\fs19\lang1033 PeekPriority\f3 :\cf0\f1\fs22\lang1032\par
+\par
+\cf3\f0\fs19\lang1033 public\cf2  TPriority PeekPriority()\par
+\{\par
+        TPriority frontItem = priority[0];\par
+        \cf3 return\cf2  frontItem;\par
+\}\par
+\cf0\f1\fs22\lang1032  \f2\lang9  \lang1033\par
+\f1\lang1032\'d4\'e9 \'c5\'ee\'f5\'f0\'e7\'f1\'e5\'f4\'e5\'df; \par
+\'c7 \'eb\'e5\'e9\'f4\'ef\'f5\'f1\'e3\'df\'e1 \'f4\'e7\'f2  \cf2\f0\fs19\lang1033 PeekPriority\f4\lang1032  \'e5\'e9\'ed\'e1\'e9 \'ed\'e1 \'e4\'e9\'e1\'e2\'dc\'e6\'e5\'e9 \'f4\'ef \'f0\'f1\'f9\'f4\'ef \'ea\'e5\'eb\'e7 \'e1\'f0\'ef \'f4\'e1 \f3\lang1033 priority \f4\lang1032\'ea\'e1\'e9 \'ed\'e1 \'f4\'e1 \'e5\'ec\'f6\'e1\'ed\'e9\'e6\'e5\'e9\f3\lang1033 .\cf0\f1\fs22\lang1032\par
+\par
+\'d3\'f5\'ed\'e1\'f1\'f4\'e7\'f3\'e7  \cf2\f0\fs19\lang1033 PeekRng\f3 :\par
+\cf0\f2\fs22\par
+\cf3\f0\fs19 public\cf2  Trng PeekRng()\par
+\{\par
+\f4\lang1032\tab\f0\lang1033 Trng frontItem = rng[0];\par
+\f4\lang1032\tab\cf3\f0\lang1033 return\cf2  frontItem;\par
+\}\par
+\cf0\f2\fs22\par
+\f1\lang1032\'d4\'e9 \'c5\'ee\'f5\'f0\'e7\'f1\'e5\'f4\'e5\'df; \par
+\'c7 \'eb\'e5\'e9\'f4\'ef\'f5\'f1\'e3\'df\'e1 \'f4\'e7\'f2  \cf2\f0\fs19\lang1033 PeekRng\f4\lang1032\'e5\'e9\'ed\'e1\'e9 \'ed\'e1 \'e4\'e9\'e1\'e2\'dc\'e6\'e5\'e9 \'f4\'ef \'f0\'f1\'f9\'f4\'ef \'ea\'e5\'eb\'e7 \'e1\'f0\'ef \'f4\'e1 \f0\lang1033 rng\f4\lang1032  \'ea\'e1\'e9 \'ed\'e1 \'f4\'e1 \'e5\'ec\'f6\'e1\'ed\'e9\'e6\'e5\'e9\f3\lang1033 .\cf0\f1\fs22\lang1032\par
+\f2\lang1033\par
+\f1\lang1032\'d3\'f5\'ed\'e1\'f1\'f4\'e7\'f3\'e7  \cf2\f0\fs19\lang1033 PeekName\f3 :\par
+\par
+\cf3\f0 public\cf2  Tname PeekName()\par
+\{\par
+\f4\lang1032\tab\f0\lang1033 Tname frontItem = name[0];\par
+\f4\lang1032\tab\cf3\f0\lang1033 return\cf2  frontItem;\par
+\}\par
+\par
+\cf0\f1\fs22\lang1032\'d4\'e9 \'c5\'ee\'f5\'f0\'e7\'f1\'e5\'f4\'e5\'df; \par
+\'c7 \'eb\'e5\'e9\'f4\'ef\'f5\'f1\'e3\'df\'e1 \'f4\'e7\'f2  \cf2\f0\fs19\lang1033 PeekName\f4\lang1032  \'e5\'e9\'ed\'e1\'e9 \'ed\'e1 \'e4\'e9\'e1\'e2\'dc\'e6\'e5\'e9 \'f4\'ef \'f0\'f1\'f9\'f4\'ef \'ea\'e5\'eb\'e7 \'e1\'f0\'ef \'f4\'e1 \f3\lang1033 name\f4\lang1032  \'ea\'e1\'e9 \'ed\'e1 \'f4\'e1 \'e5\'ec\'f6\'e1\'ed\'e9\'e6\'e5\'e9\f3\lang1033 .\cf0\f1\fs22\lang1032\par
+\cf2\f3\fs19\lang1033\par
+\cf0\f1\fs22\lang1032\'d3\'f5\'ed\'e1\'f1\'f4\'e7\'f3\'e7  \cf2\f0\fs19\lang1033 PeekLane\f3 :\par
+\f0\par
+\cf3 public\cf2  Tlane PeekLane()\par
+\{\par
+\f4\lang1032\tab\f0\lang1033 Tlane frontItem = lane[0];\par
+\cf3\f4\lang1032\tab\f0\lang1033 return\cf2  frontItem;\par
+\}\par
+\par
+\cf0\f1\fs22\lang1032\'d4\'e9 \'c5\'ee\'f5\'f0\'e7\'f1\'e5\'f4\'e5\'df; \par
+\'c7 \'eb\'e5\'e9\'f4\'ef\'f5\'f1\'e3\'df\'e1 \'f4\'e7\'f2  \cf2\f0\fs19\lang1033 PeekLane\f3  \f4\lang1032\'e5\'e9\'ed\'e1\'e9 \'ed\'e1 \'e4\'e9\'e1\'e2\'dc\'e6\'e5\'e9 \'f4\'ef \'f0\'f1\'f9\'f4\'ef \'ea\'e5\'eb\'e7 \'e1\'f0\'ef \'f4\'e1 \f3\lang1033 lane\f4\lang1032  \'ea\'e1\'e9 \'ed\'e1 \'f4\'e1 \'e5\'ec\'f6\'e1\'ed\'e9\'e6\'e5\'e9\f3\lang1033 .\cf0\f1\fs22\lang1032\par
+\cf2\f3\fs19\lang1033\par
+\cf0\f1\fs22\lang1032\'d3\'f5\'ed\'e1\'f1\'f4\'e7\'f3\'e7  \cf2\f0\fs19\lang1033 Count\f3 :\par
+\f0\par
+\cf3 public\cf2  \cf3 int\cf2  Count() \par
+\{ \par
+\cf3\f4\lang1032\tab\f0\lang1033 return\cf2  priority.Count; \par
+\}\par
+\par
+\cf0\f1\fs22\lang1032\'d4\'e9 \'c5\'ee\'f5\'f0\'e7\'f1\'e5\'f4\'e5\'df; \par
+\'c7 \'eb\'e5\'e9\'f4\'ef\'f5\'f1\'e3\'df\'e1 \'f4\'e7\'f2  \cf2\f0\fs19\lang1033 Count\f3  \f4\lang1032\'e5\'e9\'ed\'e1\'e9\f3\lang1033  \f4\lang1032\'ed\'e1 \'e5\'ec\'f6\'e1\'ed\'e9\'e6\'e5\'e9 \'f0\'ef\'f3\'e1 \'f3\'f4\'ef\'e9\'f7\'e5\'e9\'e1 \'f5\'f0\'e1\'f1\'f7\'ef\'f5\'ed \'ec\'e5\'f3\'e1 \'f3\'f4\'e7\'ed \f3\lang1033 Queue.\par
+\par
+\cf0\f1\fs22\lang1032\'ca\'eb\'dc\'f3\'e7\f2\lang1033  AlarmHandler\cf2\f0\fs19  \f3 :\f0\par
+\cf3 public\cf2  \cf3 class\cf2  \cf4 AlarmHandler\cf2  : MonoBehaviour \par
+\{\par
+\par
+    Light lights;\par
+    \cf3 private\cf2  \cf3 int\cf2  i = 0;\par
+\par
+\tab\cf3 void\cf2  Start () \par
+    \{\par
+        lights = gameObject.GetComponent<Light>();\par
+\tab\}\par
+\tab\cf3 void\cf2  Update () \{\par
+        \cf3 if\cf2  (i%20 <10)\par
+            lights.enabled = \cf3 false\cf2 ;\par
+        \cf3 else\cf2\par
+            lights.enabled = \cf3 true\cf2 ;\par
+        i++;\par
+\tab\}\par
+\}\cf0\f1\fs22\lang1032\par
+\cf2\f0\fs19\lang1033\par
+\cf0\f1\fs22\lang1032\'d4\'e9 \'c5\'ee\'f5\'f0\'e7\'f1\'e5\'f4\'e5\'df; \par
+\'c7 \'eb\'e5\'e9\'f4\'ef\'f5\'f1\'e3\'df\'e1 \'f4\'e7\'f2  \f2\lang1033 AlarmHandler\cf2\f0\fs19  \f4\lang1032\'e5\'e9\'ed\'e1\'e9 \'ed\'e1 \'e1\'ed\'e1\'e2\'e5\'e9 \'ea\'e1\'e9 \'ed\'e1 \'f3\'e2\'e7\'ed\'e5\'e9 \'e1\'ed\'e1 10\f3\lang1033  frames \f4\lang1032  \par
+\'f4\'e1 \'f6\'f9\'f4\'e1-\'d6\'eb\'e1\'f2\f3\lang1033  \f4\lang1032\'f3\'f4\'e1 \'e1\'f5\'f4\'ef\'ea\'e9\'ed\'e7\'f4\'e1\f3\lang1033  \f4\lang1032\'f9\'f3\'f4\'e5 \'ed\'e1 \'e5\'f0\'e9\'e4\'e5\'e9\'ea\'ed\'e5\'e9\'ef\'f5\'ed \'f0\'f1\'ef\'e8\'e5\'f3\'e7 \'f3\'f4\'f1\'ef\'f6\'e7\'f2 \'e1\'f1\'e9\'f3\'f4\'e5\'f1\'e1\f3\lang1033 /\f4\lang1032\'e4\'e5\'ee\'e9\'e1.\f0\lang1033\par
+\f3\par
+\cf0\f1\fs22\lang1032\'ca\'eb\'dc\'f3\'e7\f2\lang1033  ReleaseCrazyCar\cf2\f0\fs19  \f3 :\par
+\cf3\f0 public\cf2  \cf3 class\cf2  \cf4\f3 Button\cf2\f0  : MonoBehaviour \par
+\{\par
+\f3\tab\cf3\f0 public\cf2  GameObject crazyCar;\par
+\f3\tab\cf3\f0 public\cf2  \cf3 void\cf2  releaseCrazyCar ()\par
+\f3\tab\f0\{\par
+\f3\tab\tab\f0 crazyCar.SetActive(\cf3 true\cf2 );\par
+\f3\tab\f0\}\par
+\}\par
+\f3\par
+\cf0\f1\fs22\lang1032\'d4\'e9 \'c5\'ee\'f5\'f0\'e7\'f1\'e5\'f4\'e5\'df; \par
+\'c7 \'eb\'e5\'e9\'f4\'ef\'f5\'f1\'e3\'df\'e1 \'f4\'e7\'f2  \f2\lang1033 ReleaseCrazyCar\cf2\f0\fs19  \f4\lang1032\'ed\'e1 \'e5\'ed\'e5\'f1\'e3\'ef\'f0\'ef\'e9\'e5\'e9 \'f4\'ef \f3\lang1033 crazyCar\f4\lang1032 .\f0\lang1033\par
+\f3\par
+\cf0\f1\fs22\lang1032\'ca\'eb\'dc\'f3\'e7\f2\lang1033  CameraControl\cf2\f0\fs19  \f3 :\par
+\par
+\cf3\f0 public\cf2  \cf3 class\cf2  \cf4 CameraControl\cf2  : MonoBehaviour\par
+\{\par
+    \cf3 private\cf2  \cf3 float\cf2  verticalInputValue;\par
+    \cf3 private\cf2  \cf3 float\cf2  horizontalInputValue;\par
+    \cf3 private\cf2  \cf3 float\cf2  zoomInputValue;\par
+    \cf3 private\cf2  Rigidbody Rigidbody;\par
+\par
+    \cf3 void\cf2  Start()\par
+    \{\par
+        Rigidbody = GetComponent<Rigidbody>();\par
+    \}\par
+\par
+    \cf3 void\cf2  Update()\par
+    \{\par
+        verticalInputValue = Input.GetAxis(\cf5 "Vertical"\cf2 );\par
+        horizontalInputValue = Input.GetAxis(\cf5 "Horizontal"\cf2 );\par
+        zoomInputValue = Input.GetAxis(\cf5 "Mouse ScrollWheel"\cf2 );\par
+    \}\par
+    \cf3 private\cf2  \cf3 void\cf2  Move()\par
+    \{\par
+        Vector3 movementVertical = transform.forward *50 * Time.deltaTime * verticalInputValue;\par
+        Vector3 zoomInAndOut = transform.up * 80 * Time.deltaTime * zoomInputValue ;\par
+        Rigidbody.MovePosition(Rigidbody.position + movementVertical+zoomInAndOut);\par
+    \}\par
+    \cf3 private\cf2  \cf3 void\cf2  FixedUpdate()\par
+    \{\par
+        Move();\par
+        Turn();\par
+    \}\par
+    \cf3 private\cf2  \cf3 void\cf2  Turn()\par
+    \{\par
+        \cf3 float\cf2  turn = 90 * Time.deltaTime * horizontalInputValue;\par
+        Quaternion turnRotation = Quaternion.Euler(0f, turn, 0f);\par
+        Rigidbody.MoveRotation(Rigidbody.rotation * turnRotation);\par
+\par
+    \}\par
+\par
+\cf0\f1\fs22\lang1032\'d4\'e9 \'c5\'ee\'f5\'f0\'e7\'f1\'e5\'f4\'e5\'df; \par
+\'c7 \'eb\'e5\'e9\'f4\'ef\'f5\'f1\'e3\'df\'e1 \'f4\'e7\'f2  \f2\lang1033 CameraControl\cf2\f0\fs19  \f4\lang1032\'e5\'e9\'ed\'e1\'e9 \'ed\'e1 \'ec\'e5\'f4\'e1\'ea\'e9\'ed\'e5\'e9 \'ef \'f7\'f1\'de\'f3\'f4\'e7\'f2 \'f4\'e7\'ed \'ea\'e1\'ec\'e5\'f1\'e1 \'f3\'e5 \'ef\'f0\'ef\'e9\'ef \'ec\'e5\'f1\'ef\'f2 \'f4\'ef\'f5 \'f7\'e1\'f1\'f4\'e7 \'e5\'f0\'e9\'e8\'f5\'ec\'e5\'e9 \'ea\'e1\'e8\'f9\'f2 \'ea\'e1\'e9 \'ed\'e1 \'f4\'e7\'ed \'f0\'e5\'f1\'e9\'f3\'f4\'f1\'e5\'f8\'e5\'e9.\f0\lang1033\par
+\f4\lang1032\'d3\'f5\'ed\'dc\'f1\'f4\'e7\'f3\'e7 \f0\lang1033 Update\f4\lang1032  \f3\lang1033 :\par
+\cf3\f0 void\cf2  Update()\par
+    \{\par
+        verticalInputValue = Input.GetAxis(\cf5 "Vertical"\cf2 );\par
+        horizontalInputValue = Input.GetAxis(\cf5 "Horizontal"\cf2 );\par
+        zoomInputValue = Input.GetAxis(\cf5 "Mouse ScrollWheel"\cf2 );\par
+    \}\par
+\cf0\f1\fs22\lang1032\'d4\'e9 \'c5\'ee\'f5\'f0\'e7\'f1\'e5\'f4\'e5\'df; \par
+\'c7 \'eb\'e5\'e9\'f4\'ef\'f5\'f1\'e3\'df\'e1 \'f4\'e7\'f2  \cf2\f0\fs19\lang1033 Update\f4\lang1032  \'e5\'e9\'ed\'e1\'e9 \'ed\'e1 \'e1\'f0\'ef\'e8\'e7\'ea\'e5\'fd\'e5\'e9 \'f4\'e1 \f3\lang1033 inputs \f4\lang1032\'f4\'ef\'f5 \'f7\'f1\'e7\'f3\'f4\'e7.\f0\lang1033\par
+\f3\par
+\par
+\f4\lang1032\'d3\'f5\'ed\'dc\'f1\'f4\'e7\'f3\'e7 \f0\lang1033 Move\f3 :\par
+\f0\par
+    \cf3 private\cf2  \cf3 void\cf2  Move()\par
+    \{\par
+        Vector3 movementVertical = transform.forward *50 * Time.deltaTime * verticalInputValue;\par
+        Vector3 zoomInAndOut = transform.up * 80 * Time.deltaTime * zoomInputValue ;\par
+        Rigidbody.MovePosition(Rigidbody.position + movementVertical+zoomInAndOut);\par
+    \}\par
+\f3\par
+\cf0\f1\fs22\lang1032\'d4\'e9 \'c5\'ee\'f5\'f0\'e7\'f1\'e5\'f4\'e5\'df; \par
+\'c7 \'eb\'e5\'e9\'f4\'ef\'f5\'f1\'e3\'df\'e1 \'f4\'e7\'f2  \cf2\f0\fs19\lang1033 Move\f4\lang1032  \'e5\'e9\'ed\'e1\'e9 \'ed\'e1 \'ec\'e5\'f4\'e1\'ea\'e9\'ed\'e5\'e9\'f4\'e5 \'e7 \'ea\'e1\'ec\'e5\'f1\'e1 \'ef\'f1\'e9\'e6\'ef\'ed\'f4\'e9\'e1 \'ea\'e1\'e9 \'ea\'e1\'e8\'e5\'f4\'e1 \'f3\'f5\'ec\'f6\'f9\'ed\'e1 \'ec\'e5 \'f4\'e1 \f3\lang1033 inputs \f4\lang1032\'f4\'ef\'f5 \'f7\'f1\'e7\'f3\'f4\'e7.\par
+\par
+\par
+\'d3\'f5\'ed\'dc\'f1\'f4\'e7\'f3\'e7 \f0\lang1033 Turn\f3 :\par
+\cf3\f0 private\cf2  \cf3 void\cf2  Turn()\par
+    \{\par
+        \cf3 float\cf2  turn = 90 * Time.deltaTime * horizontalInputValue;\par
+        Quaternion turnRotation = Quaternion.Euler(0f, turn, 0f);\par
+        Rigidbody.MoveRotation(Rigidbody.rotation * turnRotation);\par
+    \}\par
+\f3\par
+\cf0\f1\fs22\lang1032\'d4\'e9 \'c5\'ee\'f5\'f0\'e7\'f1\'e5\'f4\'e5\'df; \par
+\'c7 \'eb\'e5\'e9\'f4\'ef\'f5\'f1\'e3\'df\'e1 \'f4\'e7\'f2  \cf2\f0\fs19\lang1033 Move\f4\lang1032  \'e5\'e9\'ed\'e1\'e9 \'ed\'e1 \'f0\'e5\'f1\'e9\'f3\'f4\'e5\'f6\'e5\'f4\'e5 \'e7 \'ea\'e1\'ec\'e5\'f1\'e1 \'e1\'f1\'e9\'f3\'f4\'f1\'e1 \'ea\'e1\'e9 \'e4\'e5\'ee\'e9\'e1 \'f3\'f5\'ec\'f6\'f9\'ed\'e1 \'ec\'e5 \'f4\'e1 \f3\lang1033 inputs \f4\lang1032\'f4\'ef\'f5 \'f7\'f1\'e7\'f3\'f4\'e7.\par
+.\par
+\par
+\'ca\'eb\'e1\'f3\'e7 \f3\lang1033 WallOfDeadEnd:\par
+\f4\lang1032\par
+\cf3\f0 public\cf2  \cf3 class\cf2  \cf4\f3\lang1033 WallOfDeadEnd\cf2\f0\lang1032  : MonoBehaviour \{\par
+\par
+    CarMovement carMovement;\par
+    CrazyCarMovement crazyCarMovement;\par
+\tab\par
+    \cf3 private\cf2  \cf3 void\cf2  OnTriggerEnter(Collider other)\par
+    \{\par
+        \cf3 if\cf2  (other.CompareTag(\cf5 "Bots"\cf2 ))\par
+        \{\par
+            carMovement = other.GetComponent<CarMovement>();\par
+            carMovement.turnAround();\par
+        \}\par
+        \cf3 else\cf2  \cf3 if\cf2  (other.CompareTag(\cf5 "CrazyCar"\cf2 ))\par
+        \{\par
+            crazyCarMovement = other.GetComponent<CrazyCarMovement>();\par
+            crazyCarMovement.turnAround();\par
+        \}\par
+    \}\par
+\}\par
+\cf0\f1\fs22\'d4\'e9 \'c5\'ee\'f5\'f0\'e7\'f1\'e5\'f4\'e5\'df; \par
+\'c7 \cf2\f3\fs19\lang1033 WallOfDeadEnd\f4\lang1032  \'e1\'ed\'e1\'f0\'e1\'f1\'e7\'f3\'f4\'e1 \'f4\'ef \'e1\'e4\'e9\'e5\'ee\'ef\'e4\'ef \'f3\'f4\'ef \'ef\'f0\'ef\'e9\'ef \'ef\'f4\'e1\'ed \'f6\'f4\'e1\'f3\'e5\'e9 \'f4\'ef \'e1\'f5\'f4\'ef\'ea\'e9\'ed\'e7\'f4\'ef \'ea\'e1\'eb\'e5\'e9 \'f4\'e7\'ed \f0 crazyCarMovement.turnAround()\f4 /\f0 carMovement.turnAround\f4 () \'f9\'f3\'f4\'e5 \'ed\'e1 \'e1\'ed\'e1\'e3\'ea\'e1\'f3\'e5\'e9 \'f4\'e1 \'e1\'f5\'f4\'ef\'ea\'e9\'ed\'e7\'f4\'e1 \'ed\'e1 \'ea\'e1\'ed\'ef\'f5\'ed \'e1\'ed\'e1\'f3\'f4\'f1\'ef\'f6\'e7!\par
+\par
+\'ca\'eb\'dc\'f3\'e7 \f3\lang1033 WheelRotation\f0\lang1032\par
+\cf3 public\cf2  \cf3 class\cf2  \cf4 WheelRotating\cf2  : MonoBehaviour\par
+\{\par
+    \cf3 public\cf2  GameObject car;\par
+    CarMovement carMovement;\par
+    CrazyCarMovement crazyCarMovement;\par
+\par
+    \cf3 void\cf2  Update()\par
+    \{\par
+        \cf3 if\cf2  (car.CompareTag(\cf5 "Bots"\cf2 )) \par
+        \{\par
+            carMovement = car.GetComponent<CarMovement>();\par
+            transform.Rotate(Vector3.right * Time.deltaTime *3* carMovement.Speed);\par
+        \}\par
+        \cf3 if\cf2  (car.CompareTag(\cf5 "CrazyCar"\cf2 ))\par
+        \{\par
+            crazyCarMovement = car.GetComponent<CrazyCarMovement>();\par
+            transform.Rotate(Vector3.right * Time.deltaTime * crazyCarMovement.speed*3);\par
+        \}\par
+    \}\par
+\}\par
+\par
+\cf0\f1\fs22\'d4\'e9 \'c5\'ee\'f5\'f0\'e7\'f1\'e5\'f4\'e5\'df; \par
+\'c7 \cf2\f3\fs19\lang1033 WheelRotation \f4\lang1032\'e1\'ed\'e1\'f0\'e1\'f1\'e9\'f3\'f4\'e1 \'f4\'e7\'ed \'f0\'e5\'f1\'e9\'f3\'f4\'f1\'ef\'f6\'e7 \'f1\'ef\'e4\'e1\'f2 \'f3\'f5\'ec\'f6\'f9\'ed\'e1 \'ec\'e5 \'f4\'e7\'ed \'f4\'e1\'f7\'f5\'f4\'e7\'f4\'e1 \'f4\'ef\'f5 \'e1\'f5\'f4\'ef\'ea\'e9\'ed\'e7\'f4\'ef\'f5.\par
+\par
+\'ca\'eb\'e1\'f3\'e7 \f3\lang1033 crazyCarMovement:\par
+\cf3\f0 public\cf2  \cf3 class\cf2  \cf4 CrazyCarMovement\cf2  : MonoBehaviour \{\par
+    \cf3 public\cf2  \cf3 float\cf2  timer;\par
+    \cf3 public\cf2  \cf3 float\cf2  speed;                \par
+    \cf3 private\cf2  Rigidbody Rigidbody;              \par
+    \cf3 private\cf2  \cf3 int\cf2  turning;\par
+    \cf3 public\cf2  \cf3 int\cf2  state = 4;\par
+    \cf3 public\cf2  GameObject rightAlarm;\par
+    \cf3 public\cf2  GameObject leftAlarm;\par
+    \cf3 public\cf2  GameObject rightAlarmBack;\par
+    \cf3 public\cf2  GameObject leftAlarmBack;\par
+    \cf3 public\cf2  GameObject stop1;\par
+    \cf3 public\cf2  GameObject stop2;\par
+    \cf3 public\cf2  \cf3 int\cf2  rng;\par
+    \cf3 public\cf2  \cf3 int\cf2  prio;\par
+    \cf3 public\cf2  \cf3 int\cf2  count = 0;\par
+    \cf3 public\cf2  \cf3 float\cf2  getpoint = 0;\par
+    \cf3 void\cf2  Start()\par
+    \{\par
+        Rigidbody = GetComponent<Rigidbody>();\par
+    \}\par
+\par
+\par
+    \cf3 private\cf2  \cf3 void\cf2  FixedUpdate()\par
+    \{\par
+        Move();\par
+        getpoint = speed * Time.deltaTime + getpoint;\par
+        timer = Time.deltaTime*2 + timer;\par
+        \cf3 if\cf2  (timer > 4f)\par
+        \{\par
+            speed = Random.Range(40, 100 + 1);\par
+            timer = 0;\par
+        \}\par
+    \}\par
+\par
+    \cf3 void\cf2  Update()\par
+    \{\par
+        \cf3 if\cf2  (rng == 1)\par
+        \{\par
+            turnAlarmOn(rightAlarm);\par
+            turnAlarmOn(rightAlarmBack);\par
+        \}\par
+        \cf3 else\cf2  \cf3 if\cf2  (rng == 2)\par
+        \{\par
+            turnAlarmOn(leftAlarm);\par
+            turnAlarmOn(leftAlarmBack);\par
+        \}\par
+        \par
+        \cf3 if\cf2  (state == 1)\par
+        \{\par
+            speed = 33f;\par
+            turning = 90;\par
+            \cf3 if\cf2  (getpoint >= 75)\par
+            \{\par
+                Turn();\par
+                getpoint = -100000000;\par
+            \}\par
+        \}\par
+        \cf3 else\cf2  \cf3 if\cf2  (state == 2)\par
+        \{\par
+            speed = 34f;\par
+            turning = -90;\par
+            \cf3 if\cf2  (getpoint >= 103)\par
+            \{\par
+                Turn();\par
+                getpoint = -100000000;\par
+            \}\par
+        \}\par
+        \cf3 else\cf2  \cf3 if\cf2  (state == 3)\par
+            speed = 34f;\par
+    \}\par
+\par
+    \cf3 private\cf2  \cf3 void\cf2  Move()\par
+    \{\par
+        Vector3 movement = transform.forward * speed * Time.deltaTime;\par
+        Rigidbody.MovePosition(Rigidbody.position + movement);\par
+    \}\par
+\par
+    \cf3 public\cf2  \cf3 void\cf2  turnStopOn(GameObject r)\par
+    \{\par
+        Light a;\par
+        a = r.GetComponent<Light>();\par
+        a.enabled = \cf3 true\cf2 ;\par
+    \}\par
+\par
+    \cf3 public\cf2  \cf3 void\cf2  turnAlarmOn(GameObject r)\par
+    \{\par
+        AlarmHandler a;\par
+        a = r.GetComponent<AlarmHandler>();\par
+        a.enabled = \cf3 true\cf2 ;\par
+    \}\par
+\par
+    \cf3 public\cf2  \cf3 void\cf2  turnLightsOff(GameObject r)\par
+    \{\par
+        \cf3 if\cf2  (r != stop1 && r != stop2)\par
+        \{\par
+            AlarmHandler a;\par
+            a = r.GetComponent<AlarmHandler>();\par
+            a.enabled = \cf3 false\cf2 ;\par
+        \}\par
+        Light b;\par
+        b = r.GetComponent<Light>();\par
+        b.enabled = \cf3 false\cf2 ;\par
+    \}\par
+\par
+    \cf3 public\cf2  \cf3 void\cf2  StopAllAlarms()\par
+    \{\par
+        turnLightsOff(stop1);\par
+        turnLightsOff(stop2);\par
+        turnLightsOff(leftAlarm);\par
+        turnLightsOff(leftAlarmBack);\par
+        turnLightsOff(rightAlarm);\par
+        turnLightsOff(rightAlarmBack);\par
+    \}\par
+    \cf3 private\cf2  \cf3 void\cf2  Turn()\par
+    \{\par
+        Quaternion turnRotation = Quaternion.Euler(0f, turning, 0f);\par
+        Rigidbody.MoveRotation(Rigidbody.rotation * turnRotation);\par
+    \}\par
+\par
+    \cf3 public\cf2  \cf3 void\cf2  turnAround()\par
+    \{\par
+        turning = -90;\par
+        Turn();\par
+    \}\par
+\}\f4\lang1032\par
+\par
+\par
+\f3\lang1033\par
+}
+ 
