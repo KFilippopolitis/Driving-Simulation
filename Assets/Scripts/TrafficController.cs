@@ -72,7 +72,7 @@ public class TrafficController : MonoBehaviour {
         if (car.CompareTag("CrazyCar"))
         {
             crazyCarMovement = car.GetComponent<CrazyCarMovement>();
-            crazyCarMovement.state = crazyCarMovement.rng;
+            crazyCarMovement.state = crazyCarMovement.crazyCarDirection;
         }
     }
 
@@ -83,7 +83,7 @@ public class TrafficController : MonoBehaviour {
             carMovement = car.GetComponent<CarMovement>();
             carMovement.speed = 33f;
             carMovement.state = 4;
-            carMovement.rng = 0;
+            carMovement.botDirection = 0;
             carMovement.turnLightsOff(carMovement.leftAlarm);
             carMovement.turnLightsOff(carMovement.leftAlarmBack);
             carMovement.turnLightsOff(carMovement.rightAlarm);
@@ -98,7 +98,7 @@ public class TrafficController : MonoBehaviour {
             crazyCarMovement = car.GetComponent<CrazyCarMovement>();
             crazyCarMovement.speed = 33f;
             crazyCarMovement.state = 4;
-            crazyCarMovement.rng = 0;
+            crazyCarMovement.crazyCarDirection = 0;
             crazyCarMovement.turnLightsOff(crazyCarMovement.leftAlarm);
             crazyCarMovement.turnLightsOff(crazyCarMovement.leftAlarmBack);
             crazyCarMovement.turnLightsOff(crazyCarMovement.rightAlarm);

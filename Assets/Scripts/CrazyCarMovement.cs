@@ -14,7 +14,7 @@ public class CrazyCarMovement : MonoBehaviour {
     public GameObject leftAlarmBack;
     public GameObject stop1;
     public GameObject stop2;
-    public int rng;
+    public int crazyCarDirection;
     public int prio;
     public float getpoint = 0;
     void Start()
@@ -37,39 +37,8 @@ public class CrazyCarMovement : MonoBehaviour {
 
     void Update()
     {
-        if (rng == 1)
-        {
-            turnAlarmOn(rightAlarm);
-            turnAlarmOn(rightAlarmBack);
-        }
-        else if (rng == 2)
-        {
-            turnAlarmOn(leftAlarm);
-            turnAlarmOn(leftAlarmBack);
-        }
-        
-        if (state == 1)
-        {
-            speed = 33f;
-            turning = 90;
-            if (getpoint >= 75)
-            {
-                turn();
-                getpoint = -100000000;
-            }
-        }
-        else if (state == 2)
-        {
-            speed = 34f;
-            turning = -90;
-            if (getpoint >= 103)
-            {
-                turn();
-                getpoint = -100000000;
-            }
-        }
-        else if (state == 3)
-            speed = 34f;
+        checkIntendedDirection(botDirection);
+        checkState(state);
     }
 
     private void move()
@@ -124,5 +93,44 @@ public class CrazyCarMovement : MonoBehaviour {
     {
         turning = -90;
         turn();
+    }
+    private void checkIntendedDirection(int direction)
+    {
+        if (direction == 1)
+        {
+            turnAlarmOn(rightAlarm);
+            turnAlarmOn(rightAlarmBack);
+        }
+        else if (direction == 2)
+        {
+            turnAlarmOn(leftAlarm);
+            turnAlarmOn(leftAlarmBack);
+        }
+    }
+
+    private void checkState(int state)
+    {
+        if (state == 1)
+        {
+            speed = 33f;
+            turning = 90;
+            if (getpoint >= 75)
+            {
+                turn();
+                getpoint = -100000000;
+            }
+        }
+        else if (state == 2)
+        {
+            speed = 34f;
+            turning = -90;
+            if (getpoint >= 103)
+            {
+                turn();
+                getpoint = -100000000;
+            }
+        }
+        else if (state == 3)
+            speed = 34f;
     }
 }

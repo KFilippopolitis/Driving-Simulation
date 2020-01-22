@@ -46,7 +46,7 @@ public class LaneQueue : MonoBehaviour {
                 randomDirection = (randomDirection == 1) ? 2 : 3;
             if (leftRoad == false)
                 randomDirection = (randomDirection == 1) ? 1 : 3;
-            crazyCarMovement.rng = randomDirection;
+            crazyCarMovement.crazyCarDirection = randomDirection;
         }
 
         if (car.CompareTag("Bots"))
@@ -72,7 +72,7 @@ public class LaneQueue : MonoBehaviour {
 
             laneQueue.enqueue(car, randomDirection, priority, lane);
             carMovement = car.GetComponent<CarMovement>();
-            carMovement.prio = priority;
+            carMovement.botDirection = priority;
             carMovement.rng = randomDirection;
             if (laneQueue.count() == 1)
             {

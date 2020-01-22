@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class CarAccident : MonoBehaviour
 {
-    public GameObject fire;
-    public GameObject crazyCarFire;
+    public GameObject fireAnimation;
+    public GameObject crazyCarFireAnimation;
     public GameObject bot;
     CarMovement carMovement;
     CrazyCarMovement crazyCarMovement;
@@ -16,8 +16,8 @@ public class CarAccident : MonoBehaviour
 
         if (other.CompareTag("CrazyCar"))
         {
-            fire.SetActive(true);
-            crazyCarFire.SetActive(true);
+            fireAnimation.SetActive(true);
+            crazyCarFireAnimation.SetActive(true);
             carMovement.enabled = false;
             crazyCarMovement.enabled = false;
         }
