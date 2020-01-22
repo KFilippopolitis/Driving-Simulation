@@ -18,41 +18,41 @@ public class Queue<Tname, Trng, TPriority,Tlane> where TPriority : IComparable<T
         this.lane = new List<Tlane>();
 
     }
-    public void Enqueue(Tname nameItem, Trng rngItem, TPriority priorityItem,Tlane laneItem)
+    public void enqueue(Tname nameItem, Trng rngItem, TPriority priorityItem,Tlane laneItem)
     {
         priority.Add(priorityItem);
         rng.Add(rngItem);
         name.Add(nameItem);
         lane.Add(laneItem);
     }
-    public void Dequeue()
+    public void dequeue()
     {
         priority.RemoveAt(0);
         name.RemoveAt(0);
         rng.RemoveAt(0);
         lane.RemoveAt(0);
     }
-    public TPriority PeekPriority()
+    public TPriority peekPriority()
     {
         TPriority frontItem = priority[0];
         return frontItem;
     }
-    public Trng PeekRng()
+    public Trng peekRng()
     {
         Trng frontItem = rng[0];
         return frontItem;
     }
-    public Tname PeekName()
+    public Tname peekName()
     {
         Tname frontItem = name[0];
         return frontItem;
     }
-    public Tlane PeekLane()
+    public Tlane peekLane()
     {
         Tlane frontItem = lane[0];
         return frontItem;
     }
-    public int Count() { return priority.Count; }
+    public int count() { return priority.Count; }
    
 }
 

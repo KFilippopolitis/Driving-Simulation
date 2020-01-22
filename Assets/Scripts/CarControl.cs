@@ -20,7 +20,7 @@ public class CarControl : MonoBehaviour
     public bool leftAlarmEnabled = false;
     public bool rightAlarmEnabled = false;
     public int checkMovement = 0;
-    AlarmHandler alarmHandler;
+    AlarmSwitcher alarmHandler;
     private void Start()
     {
         Rigidbody = GetComponent<Rigidbody>();
@@ -64,7 +64,7 @@ public class CarControl : MonoBehaviour
 
     public void TurnOffOrOn(GameObject g)
     {
-        alarmHandler = g.GetComponent<AlarmHandler>();
+        alarmHandler = g.GetComponent<AlarmSwitcher>();
         if (alarmHandler.enabled == true)
         {
             Light l;

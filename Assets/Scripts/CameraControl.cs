@@ -7,11 +7,11 @@ public class CameraControl : MonoBehaviour
     private float verticalInputValue;
     private float horizontalInputValue;
     private float zoomInputValue;
-    private Rigidbody Rigidbody;
+    private Rigidbody rigidBody;
 
     void Start()
     {
-        Rigidbody = GetComponent<Rigidbody>();
+        rigidBody = GetComponent<Rigidbody>();
     }
 
     void Update()
@@ -20,22 +20,22 @@ public class CameraControl : MonoBehaviour
         horizontalInputValue = Input.GetAxis("Horizontal");
         zoomInputValue = Input.GetAxis("Mouse ScrollWheel");
     }
-    private void Move()
+    private void move()
     {
         Vector3 movementVertical = transform.forward *50 * Time.deltaTime * verticalInputValue;
         Vector3 zoomInAndOut = transform.up * 80 * Time.deltaTime * zoomInputValue ;
-        Rigidbody.MovePosition(Rigidbody.position + movementVertical+zoomInAndOut);
+        rigidBody.MovePosition(rigidBody.position + movementVertical+zoomInAndOut);
     }
     private void FixedUpdate()
     {
-        Move();
-        Turn();
+        move();
+        turn();
     }
-    private void Turn()
+    private void turn()
     {
         float turn = 90 * Time.deltaTime * horizontalInputValue;
         Quaternion turnRotation = Quaternion.Euler(0f, turn, 0f);
-        Rigidbody.MoveRotation(Rigidbody.rotation * turnRotation);
+        rigidBody.MoveRotation(rigidBody.rotation * turnRotation);
 
     }
 

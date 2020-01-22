@@ -33,7 +33,7 @@ public class RushHour : MonoBehaviour {
 
         if (Input.GetKeyDown(KeyCode.C))
         {
-            SwitchCamera(cameraId);
+            switchCamera(cameraId);
             cameraId++;
         }
 
@@ -80,7 +80,7 @@ public class RushHour : MonoBehaviour {
         }
     }
 
-    public void SwitchCamera(int cameraId)
+    public void switchCamera(int cameraId)
     {
         if (cameraId % 3 == 0)
         {

@@ -18,7 +18,7 @@ public class PriorityQueue<Tname, Trng, TPriority, Tlane> where TPriority : ICom
         this.lane = new List<Tlane>();
 
     }
-    public void Enqueue(Tname nameItem, Trng rngItem, TPriority priorityItem, Tlane laneItem)
+    public void enqueue(Tname nameItem, Trng rngItem, TPriority priorityItem, Tlane laneItem)
     {
         priority.Add(priorityItem);
         rng.Add(rngItem);
@@ -33,12 +33,12 @@ public class PriorityQueue<Tname, Trng, TPriority, Tlane> where TPriority : ICom
             {
                 break;
             }
-            ChildToParent(childIndex,parentIndex);
+            childToParent(childIndex,parentIndex);
             childIndex = parentIndex;
         }
 
     }
-    public void Dequeque()
+    public void dequeue()
     {
 
         int lastIndex = priority.Count - 1;
@@ -72,32 +72,32 @@ public class PriorityQueue<Tname, Trng, TPriority, Tlane> where TPriority : ICom
             {
                 break;
             }
-            ChildToParent(parentIndex, childIndex);
+            childToParent(parentIndex, childIndex);
             parentIndex = childIndex;
         }
     }
-    public TPriority PeekPriority()
+    public TPriority peekPriority()
     {
         TPriority frontItem = priority[0];
         return frontItem;
     }
-    public Tname PeekName()
+    public Tname peekName()
     {
         Tname frontItem = name[0];
         return frontItem;
     }
-    public Trng PeekRng()
+    public Trng peekRng()
     {
         Trng frontItem = rng[0];
         return frontItem;
     }
-    public Tlane PeekLane()
+    public Tlane peekLane()
     {
         Tlane frontItem = lane[0];
         return frontItem;
     }
-    public int Count() { return priority.Count; }
-    private void ChildToParent(int index1,int index2)
+    public int count() { return priority.Count; }
+    private void childToParent(int index1,int index2)
     {
         Trng tempRng = rng[index1];
         rng[index1] = rng[index2];

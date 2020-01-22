@@ -5,7 +5,7 @@ using UnityEngine;
 public class CrazyCarMovement : MonoBehaviour {
     public float timer;
     public float speed;                
-    private Rigidbody Rigidbody;              
+    private Rigidbody rigidBody;              
     private int turning;
     public int state = 4;
     public GameObject rightAlarm;
@@ -16,19 +16,18 @@ public class CrazyCarMovement : MonoBehaviour {
     public GameObject stop2;
     public int rng;
     public int prio;
-    public int count = 0;
     public float getpoint = 0;
     void Start()
     {
-        Rigidbody = GetComponent<Rigidbody>();
+        rigidBody = GetComponent<Rigidbody>();
     }
 
 
     private void FixedUpdate()
     {
-        Move();
+        move();
         getpoint = speed * Time.deltaTime + getpoint;
-        timer = Time.deltaTime*2 + timer;
+        timer = Time.deltaTime * 2 + timer;
         if (timer > 4f)
         {
             speed = Random.Range(40, 100 + 1);
@@ -55,7 +54,7 @@ public class CrazyCarMovement : MonoBehaviour {
             turning = 90;
             if (getpoint >= 75)
             {
-                Turn();
+                turn();
                 getpoint = -100000000;
             }
         }
@@ -65,7 +64,7 @@ public class CrazyCarMovement : MonoBehaviour {
             turning = -90;
             if (getpoint >= 103)
             {
-                Turn();
+                turn();
                 getpoint = -100000000;
             }
         }
@@ -73,10 +72,10 @@ public class CrazyCarMovement : MonoBehaviour {
             speed = 34f;
     }
 
-    private void Move()
+    private void move()
     {
         Vector3 movement = transform.forward * speed * Time.deltaTime;
-        Rigidbody.MovePosition(Rigidbody.position + movement);
+        rigidBody.MovePosition(rigidBody.position + movement);
     }
 
     public void turnStopOn(GameObject r)
@@ -88,8 +87,8 @@ public class CrazyCarMovement : MonoBehaviour {
 
     public void turnAlarmOn(GameObject r)
     {
-        AlarmHandler a;
-        a = r.GetComponent<AlarmHandler>();
+        AlarmSwitcher a;
+        a = r.GetComponent<AlarmSwitcher>();
         a.enabled = true;
     }
 
@@ -97,8 +96,8 @@ public class CrazyCarMovement : MonoBehaviour {
     {
         if (r != stop1 && r != stop2)
         {
-            AlarmHandler a;
-            a = r.GetComponent<AlarmHandler>();
+            AlarmSwitcher a;
+            a = r.GetComponent<AlarmSwitcher>();
             a.enabled = false;
         }
         Light b;
@@ -106,7 +105,7 @@ public class CrazyCarMovement : MonoBehaviour {
         b.enabled = false;
     }
 
-    public void StopAllAlarms()
+    public void stopAllAlarms()
     {
         turnLightsOff(stop1);
         turnLightsOff(stop2);
@@ -115,15 +114,15 @@ public class CrazyCarMovement : MonoBehaviour {
         turnLightsOff(rightAlarm);
         turnLightsOff(rightAlarmBack);
     }
-    private void Turn()
+    private void turn()
     {
         Quaternion turnRotation = Quaternion.Euler(0f, turning, 0f);
-        Rigidbody.MoveRotation(Rigidbody.rotation * turnRotation);
+        rigidBody.MoveRotation(rigidBody.rotation * turnRotation);
     }
 
     public void turnAround()
     {
         turning = -90;
-        Turn();
+        turn();
     }
 }
