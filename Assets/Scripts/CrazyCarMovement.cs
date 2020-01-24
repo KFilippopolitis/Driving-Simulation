@@ -37,7 +37,7 @@ public class CrazyCarMovement : MonoBehaviour {
 
     void Update()
     {
-        checkIntendedDirection(botDirection);
+        checkIntendedDirection(crazyCarDirection);
         checkState(state);
     }
 

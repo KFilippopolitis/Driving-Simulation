@@ -1,6 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class RushHour : MonoBehaviour {
     public GameObject car1;
@@ -19,18 +21,18 @@ public class RushHour : MonoBehaviour {
     public GameObject car14;
     public GameObject car15;
     public GameObject car16;
+    public GameObject buttonText;
+    Text text;
     public float timer;
     private int cameraId = 1;
     public GameObject camera1;
     public GameObject camera2;
     public GameObject camera3;
 
-    void Start() 
-    {
-    }
     void Update()
     {
-
+        text = buttonText.GetComponent<Text>();
+        text.text = ((Convert.ToInt32(timer/5)+6)%24).ToString() + ":00";
         if (Input.GetKeyDown(KeyCode.C))
         {
             switchCamera(cameraId);

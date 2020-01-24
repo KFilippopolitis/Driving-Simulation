@@ -3,7 +3,7 @@
 
 public class LaneQueue : MonoBehaviour {
     public Queue<Collider, int, int, int> laneQueue;
-    public TrafficController trafficController;
+    TrafficController trafficController;
     public GameObject gameObjectCross;
     private CrazyCarMovement crazyCarMovement;
     CarMovement carMovement;
@@ -13,12 +13,12 @@ public class LaneQueue : MonoBehaviour {
     public bool rightSigns;
     public bool leftSigns;
     public bool forwardSigns;
-    public bool rightResult;
-    public bool leftResult;
-    public bool forwardResult;
-    public int randomDirection;
+    private bool rightResult;
+    private bool leftResult;
+    private bool forwardResult;
+    private int randomDirection;
     public int priorityAccordingToSigns;
-    public int priority;
+    private int priority;
     public int lane;
 
 
@@ -73,7 +73,7 @@ public class LaneQueue : MonoBehaviour {
             laneQueue.enqueue(car, randomDirection, priority, lane);
             carMovement = car.GetComponent<CarMovement>();
             carMovement.botDirection = priority;
-            carMovement.rng = randomDirection;
+            carMovement.botDirection = randomDirection;
             if (laneQueue.count() == 1)
             {
                 trafficController = gameObjectCross.GetComponent<TrafficController>();
